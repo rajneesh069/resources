@@ -222,9 +222,11 @@
 
 ### [Karan Aujla](https://www.youtube.com/channel/UC3XBkDeCVXCoCofFgfUZXGw) - Play [Wavy](https://youtu.be/XTp5jaRU3Ws?si=pAfN_X8ayuZCMOI6), [Few Days](https://youtu.be/Obij2jXpifY?si=P7R13m-_8ziudGee), [Tell Me](https://youtu.be/KNxv88wUgnM?si=IbH_O-sKFLn53YWd), [Itz a Hustle](https://youtu.be/X2cnLb1Qa0w?si=uL-ria59KfBIehMe), [Golgappe vs Daaru](https://youtu.be/x1cSJnumhJs?si=PIUFR17mWHLhorCD), [Adhiya](https://youtu.be/zsmcSN7sW0s?si=PzB4atLLogfK5-Sp), [Here and There](https://youtu.be/0g92o2bezkc?si=ealpUUgXVvT_u0vJ) in bg to learn - Most Important Step
 
+- [An inspiring talk by Andreas Kling, the creator of Ladybird Browser](https://youtu.be/9YM7pDMLvr4?si=T3nzd2kp2AVBJkDE)
+
 1. [Chai aur Code YT Channel](https://www.youtube.com/@chaiaurcode)
 2. [Piyush Garg](http://youtube.com/@piyushgargdev)
-   - [In depth Node.js and GraphQL](https://www.youtube.com/playlist?list=PLinedj3B30sDby4Al-i13hQJGQoRQDfPo)
+   - [In depth Node.js and GraphQL](https://www.youtube.com/playlist?list=PLinedj3B30sDby4Al-i13hQJGQoRQDfPo) - Recommended Watch
 3. [Hitesh Choudhary](https://www.youtube.com/@HiteshCodeLab)
 4. [Harkirat Singh's Projects - Build Your Own XYZ](https://www.youtube.com/playlist?list=PLVKLWop9wWA8rdaNPIsG6r4a6QZClCH-M)
 5. [Theo Browne](https://www.youtube.com/@t3dotgg)
