@@ -202,7 +202,9 @@
     - [Another tutorial by Theo Browne](https://youtu.be/c-hKSbzooAg?si=qHylZyqIQsDGHsWt)
 11. Learn [Hono.js](https://hono.dev/) and understand Workers and other runtimes of platforns like AWS and what problems does Hono.js solve!
     - [Video](https://youtu.be/AcQm4x5dxeU?si=oB_Zb2bvCk_18kaC)
-12. Learn [Redis](https://youtu.be/IJkYipYNEtI?si=bVXeGJhOPjG37E55) for caching
+12. Learn [Redis](https://youtu.be/Vx2zPMPvmug) for caching
+    - [Harkirat Singh's Complete Redis + WebSockets Course](https://youtu.be/IJkYipYNEtI?si=bVXeGJhOPjG37E55)
+
 13. Learn Docker for containerizing the apps you make
     - [Docker Part 1](https://youtu.be/31k6AtW-b3Y?si=oJUlGwEJo_dnb6H7)
     - [Docker Part 2](https://youtu.be/xPT8mXa-sJg?si=zmJ0DoewUVWoch2a)
