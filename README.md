@@ -173,10 +173,12 @@
    - [JavaScript for Interviews Part 2](https://youtube.com/playlist?list=PLlasXeu85E9eWOpw9jxHOQyGMRiBZ60aX&si=sR6DuFYmAaHh2-oB)
 1. Learn [TypeScript](https://youtu.be/30LWjhZzg50) - **NEVER USE JS AGAIN**
    - [Some TS tips](https://youtu.be/lraHlXpuhKs?si=mK7_IBJvDwUTT-XR)
+   - Advice: After completing TS, opt for TypeScript in each project, even if the tutorial is in JavaScript. You should practice writing TS from Day 1 and ask [ChatGPT](https://chatgpt.com)/[Grok](https://grok.com/?referrer=website) for the types you don't know/if they don't make sense.
 2. Learn the MERN stack (You can go for MEAN stack as well, A stands for Angular, then Next.js isn't required)
    - [React.js](https://youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsL4hTnJIrtige&si=0ewB2weoSF-pU3LR)
    - [Node.js + Express.js + MongoDB](https://youtube.com/playlist?list=PLu71SKxNbfoBGh_8p_NS-ZAh6v7HhYqHW&si=dP2vWWYbE_ZQd0J7)
 3. Learn [Tanstack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
+   - Use `vite` to initialize projects. CRA(create-react-app) has been deprecated and strongly NOT recommended to use.
    1. [Why use it? - Part 1](https://youtu.be/xIflplz925Y)
    2. [Why use it? - Part 2](https://youtu.be/vxkbf5QMA2g)
    3. [How to use it?](https://youtu.be/GEeBG7AoQdM)
