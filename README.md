@@ -193,6 +193,7 @@
    - [Next.js Nuances](https://youtu.be/5QP0mvrJkiY?si=pZdkzh7CInzYzmIb)
 6. Understand what are [Server Components](https://youtu.be/VIwWgV3Lc6s?si=D48qZjwv6lvHNppD) and how to use them
 7. Learn [Prisma ORM](https://www.prisma.io/) and a SQL database(PostgreSQL recommended - [Neon](https://neon.tech/) for remote hosting)
+   - Recommendation: Remove the `output` field from `generator client` portion of schema.prisma. The field causes unknown and unwanted errors as the wasm.js file contains `require()` syntax which is forbidden in modern TS syntax, could be disabled by `.eslintignore` but that's another hassle.
    - [Video 1](https://youtu.be/QXxy8Uv1LnQ?si=8AyGxRlDi1jzf83A)
    - [Video 2](https://youtu.be/RebA5J-rlwg?si=DubInABLgjQPpoPW)
 8. Learn how to use a UI library (Recommended: [ShadCN/UI](https://ui.shadcn.com/docs))
