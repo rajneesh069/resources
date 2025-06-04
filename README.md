@@ -32,6 +32,9 @@
 
 ### Resources to study all the topics
 
+0. Without any prior programming knowledge, learn [C](https://youtu.be/ZSPZob_1TOk?si=JdaG7eCNVnAY4W7w) first, and then `Java Basics` so that you can understand the DSA codes in Java.
+   - [Java Basics](https://www.youtube.com/playlist?list=PL9gnSGHSqcnr_DxHsP7AW9ftq0AtAyYqJ): Video 1 - 12, 21, 37, 38
+   - [Optional OOP in Java](https://youtube.com/playlist?list=PL9gnSGHSqcno1G3XjUbwzXHL8_EttOuKk&si=5lwS6bEsIcMDjKD3)
 1. C++ and some miscellaneous concepts - from 1 to 24 - [Luv's Playlist](https://www.youtube.com/playlist?list=PLauivoElc3ggagradg8MfOZreCMmXMmJ-)
 
    - [Completely Optional](https://youtu.be/0ffwhxW-uyw?si=kuu0lY5KrM-_Y6r4)
