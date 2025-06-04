@@ -26,7 +26,7 @@
 ## 1. For Interviews
 
 - Code in C++, but be comfortable with [Java](https://www.youtube.com/playlist?list=PL9gnSGHSqcnr_DxHsP7AW9ftq0AtAyYqJ), as some resources are in Java and you **must** be able to understand it and then convert the code to CPP.
-- A good resource for C++ game development and C++ learning too: [The Cherno](https://www.youtube.com/@TheCherno).
+- A good resource for C++ game development and C++ learning too: [The Cherno](https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb).
 - DSA is language agnostic ;&#41;
 - Follow [**Striver's A2Z SDE Sheet**](https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2) and that same sequence.
 - It contains 450 questions, all of them must be in your mind including all the topics listed in the sheet.
