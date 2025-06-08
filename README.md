@@ -184,6 +184,7 @@
 3. Learn the MERN stack (You can go for MEAN stack as well, A stands for Angular, then Next.js isn't required)
    - [React.js](https://youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsL4hTnJIrtige&si=0ewB2weoSF-pU3LR)
    - [Node.js + Express.js + MongoDB](https://youtube.com/playlist?list=PLu71SKxNbfoBGh_8p_NS-ZAh6v7HhYqHW&si=dP2vWWYbE_ZQd0J7)
+   - [Understand `React.memo`(the difference between `useMemo` and `React.memo`), `useCallback` and the new react compiler's benefits](https://youtu.be/INLq9RPAYUw)
 4. Learn [Tanstack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
    - Use `vite` to initialize projects. CRA(create-react-app) has been deprecated and strongly NOT recommended to use.
    1. [Why use it? - Part 1](https://youtu.be/xIflplz925Y)
