@@ -8,12 +8,12 @@
 
 - #### Only resources marked as optional are optional ;&#41;
 
-- ### Please learn the [Markdown syntax](https://youtu.be/uUwT0yYglX0?si=UkEEg4ZrH-zdamhp) and [Git](https://youtu.be/q8EevlEpQ2A?list=PLu71SKxNbfoC4nsN2NTFEHPCyvm_CnbDq) first
+- ## Please learn the [Markdown syntax](https://youtu.be/uUwT0yYglX0?si=UkEEg4ZrH-zdamhp) and [Git](https://youtu.be/q8EevlEpQ2A?list=PLu71SKxNbfoC4nsN2NTFEHPCyvm_CnbDq) first!
 
   - [Git in depth](https://www.youtube.com/playlist?list=PLu0W_9lII9agwhy658ZPA0MTStKUJTWPi)
   - [Git with Primeagen](https://youtu.be/rH3zE7VlIMs?si=wsCL-nAZ6_V0GJtK)
 
-- **Without any prior programming knowledge, learn [C](https://youtu.be/ZSPZob_1TOk?si=JdaG7eCNVnAY4W7w) first.**
+- ## Without any prior programming knowledge, learn [C](https://youtu.be/ZSPZob_1TOk?si=JdaG7eCNVnAY4W7w)
 
   - [C in depth by Lovepreet Singh](https://youtu.be/lpDFGeqjvbI)
 
