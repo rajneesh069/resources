@@ -309,15 +309,13 @@
   1. [C in depth by Lovepreet Singh](https://youtu.be/lpDFGeqjvbI)
   2. [CMake Practical Guide](https://youtu.be/IBgfeZME2Vw)
   - Probably Optional: [C projects and fundamentals by Dr. Jonas Birch](https://youtube.com/playlist?list=PLdNUbYq5poiW6cumyg2w35fI9w9ivfZcD&si=HGr52Uv_HGrX93e4)
-- [Database Management System](https://youtu.be/dl00fOOYLOM?si=gH_DMcelYyAoIoDY)
-- [Operating Systems](https://youtu.be/3obEP8eLsCw?si=QZRLpyZtRZ7gEnix)
-  - [Applied Operating System by Lovepreet Singh](https://youtube.com/playlist?list=PL7CBVLpg0zqfIdcwDNa5c2xbhvK4crNqc&si=euuUk5miaWXg_lF8)
-  - Project(s):
-    - [Coding MS DOS in C](https://youtu.be/04BplOHSY_A?si=kamCA6TOBdmINkyD)
-- [Computer Networking](https://youtu.be/IPvYjXCsTg8?si=NckRALP3SygJo6RS)
-  - [Computer Networking in depth](https://youtu.be/PhjHXeMNpp8?si=eqnhEIvg6g9GGtQA)
-  - [Network Programming in C](https://youtu.be/14YO3xjm6LY?si=40TqIBypjsZHottZ)
-- [Compiler Design](https://youtu.be/OQCjakjCJu4?si=qxXl-AGHOC5FVXrx) - Theory
+- [Database Management System Theory](https://youtu.be/dl00fOOYLOM?si=gH_DMcelYyAoIoDY)
+- [Operating Systems Theory](https://youtu.be/3obEP8eLsCw?si=QZRLpyZtRZ7gEnix)
+  - **THE OG BEST RESOURCE**: [Applied Operating System by Lovepreet Singh](https://youtube.com/playlist?list=PL7CBVLpg0zqfIdcwDNa5c2xbhvK4crNqc&si=euuUk5miaWXg_lF8)
+- [Computer Networking Basics](https://youtu.be/IPvYjXCsTg8?si=NckRALP3SygJo6RS)
+  - [Computer Networking Theory in depth](https://youtu.be/PhjHXeMNpp8?si=eqnhEIvg6g9GGtQA)
+  - [Group Chat App - Socket Programming in C](https://youtu.be/KEiur5aZnIM)
+- [Compiler Design Theory](https://youtu.be/OQCjakjCJu4?si=qxXl-AGHOC5FVXrx)
 
 ---
 
