@@ -339,7 +339,7 @@
 5. [Computer Networking Basics](https://youtu.be/IPvYjXCsTg8?si=NckRALP3SygJo6RS)
 
    - [Computer Networking Theory in depth](https://youtu.be/PhjHXeMNpp8?si=eqnhEIvg6g9GGtQA)
-   - [Group Chat App - Socket Programming in C](https://youtu.be/KEiur5aZnIM)
+   - [Socket Programming in C with Group Chat App project](https://youtube.com/playlist?list=PLu_a4hjJo1mTiX7v_Uj2TixvjXsNsY7SZ&si=6l9xDYn-NynP1s3J)
 
 6. [Compiler Design Theory](https://youtu.be/OQCjakjCJu4?si=qxXl-AGHOC5FVXrx)
 
