@@ -315,7 +315,7 @@
 
 - [C](https://youtu.be/ZSPZob_1TOk?si=JdaG7eCNVnAY4W7w)
   1. [C in depth by Lovepreet Singh](https://youtu.be/lpDFGeqjvbI)
-  2. [CMake Practical Guide](https://youtu.be/IBgfeZME2Vw)
+  2. [CMake Practical Guide][cmake-guide]
   - Probably Optional: [C projects and fundamentals by Dr. Jonas Birch](https://youtube.com/playlist?list=PLdNUbYq5poiW6cumyg2w35fI9w9ivfZcD&si=HGr52Uv_HGrX93e4)
 - [Database Management System Theory](https://youtu.be/dl00fOOYLOM?si=gH_DMcelYyAoIoDY)
 - [Operating Systems Theory](https://youtu.be/3obEP8eLsCw?si=QZRLpyZtRZ7gEnix)
@@ -324,6 +324,7 @@
   - [Computer Networking Theory in depth](https://youtu.be/PhjHXeMNpp8?si=eqnhEIvg6g9GGtQA)
   - [Group Chat App - Socket Programming in C](https://youtu.be/KEiur5aZnIM)
 - [Compiler Design Theory](https://youtu.be/OQCjakjCJu4?si=qxXl-AGHOC5FVXrx)
+  - Practical Knowledge([CMake][cmake-guide] Familiarity required, use [Google](https://www.google.com/) and AI like [ChatGPT](https://chatgpt.com/) or [Perplexity](https://www.perplexity.ai/) to ask things you do NOT understand): [Creating your own compiler in C++](https://youtube.com/playlist?list=PLUDlas_Zy_qC7c5tCgTMYq2idyyT241qs&si=aSzezw-zlFDEeFwQ)
 
 ---
 
@@ -353,3 +354,5 @@
 - [Engineering Digest](https://www.youtube.com/@EngineeringDigest)
 
 ---
+
+[cmake-guide]: https://youtu.be/IBgfeZME2Vw
