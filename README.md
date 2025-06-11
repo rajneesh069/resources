@@ -310,6 +310,7 @@
   - Probably Optional: [C projects and fundamentals](https://youtube.com/playlist?list=PLdNUbYq5poiW6cumyg2w35fI9w9ivfZcD&si=HGr52Uv_HGrX93e4)
 - [Database Management System](https://youtu.be/dl00fOOYLOM?si=gH_DMcelYyAoIoDY)
 - [Operating Systems](https://youtu.be/3obEP8eLsCw?si=QZRLpyZtRZ7gEnix)
+  - [Applied Operating System by Lovepreet Singh](https://youtube.com/playlist?list=PL7CBVLpg0zqfIdcwDNa5c2xbhvK4crNqc&si=euuUk5miaWXg_lF8)
   - Project(s):
     - [Coding MS DOS in C](https://youtu.be/04BplOHSY_A?si=kamCA6TOBdmINkyD)
 - [Computer Networking](https://youtu.be/IPvYjXCsTg8?si=NckRALP3SygJo6RS)
@@ -322,11 +323,11 @@
 # System Design
 
 - [LLD](https://youtube.com/playlist?list=PLpxM6m39X_t-Rk9lZVVD4U6JycAAIIEDW&si=Bg-S5w3iRc_lEMAS) - Java familarity required, code in CPP, i.e., convert Java code to CPP using [ChatGPT](https://chatgpt.com/) or [Perplexity](https://www.perplexity.ai/)
-- Build Multithreading projects(in C, C++, Java or Go)
-  - [Multithreading in C++](https://youtu.be/zUy66Bats5c?si=hnV1vLkvjQQrlWcR)
-  - [Multithreaded Web Server in C](https://youtu.be/eTvSgOoc_BE?si=IxAzeH7URn8_hXfy)
-  - [Java Multithreading](https://youtu.be/4aYvLz4E1Ts?si=Sj7GKzmhCw6pa5zQ)
-  - [Multithreaded Web Server in Java](https://youtu.be/YKbHMqglwMM?si=v4skbuiuu4eW_FV1)
+- Undersatand and build Multithreading projects(in C, C++, Java or Go)
+  1. Atleast learn the theory first from this video and then move to the CPP coding if you don't wanna do it in Java: [Java Multithreading](https://youtu.be/4aYvLz4E1Ts?si=Sj7GKzmhCw6pa5zQ)
+  2. [Multithreading in C++](https://youtu.be/zUy66Bats5c?si=hnV1vLkvjQQrlWcR)
+  3. [Multithreaded Web Server in C](https://youtu.be/eTvSgOoc_BE?si=IxAzeH7URn8_hXfy)
+  4. [Multithreaded Web Server in Java](https://youtu.be/YKbHMqglwMM?si=v4skbuiuu4eW_FV1)
 
 ### Resources to learn more/follow
 
@@ -342,5 +343,6 @@
 - [Code With Aryan](https://www.youtube.com/@codeWithAryanBhai)
 - [Lovepreet Singh](https://www.youtube.com/@SinghDevHub)
 - [Cpp Nuts](https://www.youtube.com/@CppNuts)
+- [Engineering Digest](https://www.youtube.com/@EngineeringDigest)
 
 ---
