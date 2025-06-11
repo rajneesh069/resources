@@ -329,12 +329,12 @@
 
 # System Design
 
-- [LLD](https://youtube.com/playlist?list=PLpxM6m39X_t-Rk9lZVVD4U6JycAAIIEDW&si=Bg-S5w3iRc_lEMAS) - Java familarity required, code in CPP, i.e., convert Java code to CPP using [ChatGPT](https://chatgpt.com/) or [Perplexity](https://www.perplexity.ai/)
-- Undersatand and build Multithreading projects(in C, C++, Java or Go)
+- Understand and build Multithreading projects(in C, C++, Java or Go)
   1. Atleast learn the theory first from this video and then move to the CPP coding if you don't wanna do it in Java: [Java Multithreading](https://youtu.be/4aYvLz4E1Ts?si=Sj7GKzmhCw6pa5zQ)
   2. [Multithreading in C++](https://youtu.be/zUy66Bats5c?si=hnV1vLkvjQQrlWcR)
   3. [Multithreaded Web Server in C](https://youtu.be/eTvSgOoc_BE?si=IxAzeH7URn8_hXfy)
   4. [Multithreaded Web Server in Java](https://youtu.be/YKbHMqglwMM?si=v4skbuiuu4eW_FV1)
+- [LLD](https://youtube.com/playlist?list=PLpxM6m39X_t-Rk9lZVVD4U6JycAAIIEDW&si=Bg-S5w3iRc_lEMAS) - Java familarity required, code in CPP, i.e., convert Java code to CPP using [ChatGPT](https://chatgpt.com/) or [Perplexity](https://www.perplexity.ai/)
 
 ### Resources to learn more/follow
 
