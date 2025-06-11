@@ -306,8 +306,9 @@
 # Core Computer Science Fundamentals
 
 - [C](https://youtu.be/ZSPZob_1TOk?si=JdaG7eCNVnAY4W7w)
+  1. [C in depth by Lovepreet Singh](https://youtu.be/lpDFGeqjvbI)
+  2. [CMake Practical Guide](https://youtu.be/IBgfeZME2Vw)
   - Probably Optional: [C projects and fundamentals by Dr. Jonas Birch](https://youtube.com/playlist?list=PLdNUbYq5poiW6cumyg2w35fI9w9ivfZcD&si=HGr52Uv_HGrX93e4)
-  - [CMake Practical Guide](https://youtu.be/IBgfeZME2Vw)
 - [Database Management System](https://youtu.be/dl00fOOYLOM?si=gH_DMcelYyAoIoDY)
 - [Operating Systems](https://youtu.be/3obEP8eLsCw?si=QZRLpyZtRZ7gEnix)
   - [Applied Operating System by Lovepreet Singh](https://youtube.com/playlist?list=PL7CBVLpg0zqfIdcwDNa5c2xbhvK4crNqc&si=euuUk5miaWXg_lF8)
