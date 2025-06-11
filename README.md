@@ -329,7 +329,7 @@
   - [Computer Networking Theory in depth](https://youtu.be/PhjHXeMNpp8?si=eqnhEIvg6g9GGtQA)
   - [Group Chat App - Socket Programming in C](https://youtu.be/KEiur5aZnIM)
 - [Compiler Design Theory](https://youtu.be/OQCjakjCJu4?si=qxXl-AGHOC5FVXrx)
-  - [CMake][cmake-guide] familiarity is required for the resource listed below
+  - [CMake][cmake-guide] and [CPP development basics](https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb) is required for the resource listed below, for the CPP development basics, follow the learn as you go technique,i.e., if you don't understand something from the resource below then checkout this playlist, learn it and move forward. Also, use Google and AI extensively to ask and understand!
     - [Creating your own compiler in C++](https://youtube.com/playlist?list=PLUDlas_Zy_qC7c5tCgTMYq2idyyT241qs&si=aSzezw-zlFDEeFwQ)
 
 ---
