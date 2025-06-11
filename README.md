@@ -17,7 +17,7 @@
 
   - [C in depth by Lovepreet Singh](https://youtu.be/lpDFGeqjvbI)
 
-- A good resource for learning C++ game development basics: [The Cherno](https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb).
+- A good resource for learning C++ basics and game development: [The Cherno](https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb).
 
 - Some good AI chat apps
   1. [T3 Chat](https://t3.chat/)
@@ -328,6 +328,8 @@
 
 2. [Java Basics](https://www.youtube.com/playlist?list=PL9gnSGHSqcnr_DxHsP7AW9ftq0AtAyYqJ) : Video 1 - 12, 21, 37, 38
 
+   - [OOP in Java](https://youtube.com/playlist?list=PL9gnSGHSqcno1G3XjUbwzXHL8_EttOuKk&si=viGFgTeNhxw-Y4EZ)
+
 3. [Database Management System Theory](https://youtu.be/dl00fOOYLOM?si=gH_DMcelYyAoIoDY)
 
 4. [Operating Systems Theory](https://youtu.be/3obEP8eLsCw?si=QZRLpyZtRZ7gEnix)
@@ -341,7 +343,7 @@
 
 6. [Compiler Design Theory](https://youtu.be/OQCjakjCJu4?si=qxXl-AGHOC5FVXrx)
 
-   - [CMake][cmake-guide] and [CPP development basics](https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb) is required for the resource listed below, for the CPP development basics, follow the learn as you go technique,i.e., if you don't understand something from the resource below then checkout this playlist, learn it and move forward. Also, use Google and AI extensively to ask and understand!
+   - [CMake][cmake-guide] and [CPP development](https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb) is required for the resource listed below, for the CPP development part, follow the learn as you go technique,i.e., if you don't understand something from the resource below then checkout this playlist, learn it and move forward. Also, use Google and AI extensively to ask and understand!
      - [Creating your own compiler in C++](https://youtube.com/playlist?list=PLUDlas_Zy_qC7c5tCgTMYq2idyyT241qs&si=aSzezw-zlFDEeFwQ)
 
 ---
