@@ -6,17 +6,29 @@
 
 - #### Am I an ideal Software Engineer - No, just trying to be, over time ;&#41;
 
+- #### Only resources marked as optional are optional ;&#41;
+
 - ### Please learn the [Markdown syntax](https://youtu.be/uUwT0yYglX0?si=UkEEg4ZrH-zdamhp) and [Git](https://youtu.be/q8EevlEpQ2A?list=PLu71SKxNbfoC4nsN2NTFEHPCyvm_CnbDq) first
+
   - [Git in depth](https://www.youtube.com/playlist?list=PLu0W_9lII9agwhy658ZPA0MTStKUJTWPi)
   - [Git with Primeagen](https://youtu.be/rH3zE7VlIMs?si=wsCL-nAZ6_V0GJtK)
-- #### Only optional resources are optional ;&#41;
-- Some videos to watch before starting DSA:
-  - [Video 1](https://youtu.be/soMOw2IWMIY?si=kn3YUUqaPJnNX6XZ)
-  - [Video 2](https://youtu.be/Phtq6VvThDI?si=L8YyoYfykKMHK6rJ)
+
+- **Without any prior programming knowledge, learn [C](https://youtu.be/ZSPZob_1TOk?si=JdaG7eCNVnAY4W7w) first.**
+
+  - [C in depth by Lovepreet Singh](https://youtu.be/lpDFGeqjvbI)
+
+- A good resource for learning C++ game development basics: [The Cherno](https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb).
 
 ---
 
 # Data Structures and Algorithms
+
+- Some videos to watch before starting DSA:
+
+  - [Video 1](https://youtu.be/soMOw2IWMIY?si=kn3YUUqaPJnNX6XZ)
+  - [Video 2](https://youtu.be/Phtq6VvThDI?si=L8YyoYfykKMHK6rJ)
+  - [Java Basics](https://www.youtube.com/playlist?list=PL9gnSGHSqcnr_DxHsP7AW9ftq0AtAyYqJ): Video 1 - 12, 21, 37, 38
+  - [Optional OOP in Java](https://youtube.com/playlist?list=PL9gnSGHSqcno1G3XjUbwzXHL8_EttOuKk&si=5lwS6bEsIcMDjKD3)
 
 - My repos:
   - [DSA - CPP](https://github.com/rajneesh069/DSA-CPP.git)
@@ -25,17 +37,13 @@
 
 ## 1. For Interviews
 
-- Code in C++, but be comfortable with [Java](https://www.youtube.com/playlist?list=PL9gnSGHSqcnr_DxHsP7AW9ftq0AtAyYqJ), as some resources are in Java and you **must** be able to understand it and then convert the code to CPP.
-- A good resource for C++ game development and C++ learning too: [The Cherno](https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb).
+- Code in C++, but be comfortable with Java, as some resources are in Java and you **must** be able to understand it and then convert the code to CPP.
 - DSA is language agnostic ;&#41;
 - Follow [**Striver's A2Z SDE Sheet**](https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2) and that same sequence.
 - It contains 450 questions, all of them must be in your mind including all the topics listed in the sheet.
 
 ### Resources to study all the topics
 
-0. Without any prior programming knowledge, learn [C](https://youtu.be/ZSPZob_1TOk?si=JdaG7eCNVnAY4W7w) first, and then `Java Basics` so that you can understand the DSA codes in Java.
-   - [Java Basics](https://www.youtube.com/playlist?list=PL9gnSGHSqcnr_DxHsP7AW9ftq0AtAyYqJ): Video 1 - 12, 21, 37, 38
-   - [Optional OOP in Java](https://youtube.com/playlist?list=PL9gnSGHSqcno1G3XjUbwzXHL8_EttOuKk&si=5lwS6bEsIcMDjKD3)
 1. C++ and some miscellaneous concepts - from 1 to 24 - [Luv's Playlist](https://www.youtube.com/playlist?list=PLauivoElc3ggagradg8MfOZreCMmXMmJ-)
 
    - [Completely Optional](https://youtu.be/0ffwhxW-uyw?si=kuu0lY5KrM-_Y6r4)
