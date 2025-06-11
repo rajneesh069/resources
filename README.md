@@ -19,6 +19,11 @@
 
 - A good resource for learning C++ game development basics: [The Cherno](https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb).
 
+- Some good AI chat apps
+  1. [T3 Chat](https://t3.chat/)
+  2. [ChatGPT](https://chatgpt.com/)
+  3. [Perplexity](https://www.perplexity.ai/)
+
 ---
 
 # Data Structures and Algorithms
