@@ -32,7 +32,7 @@
 
   - [Video 1](https://youtu.be/soMOw2IWMIY?si=kn3YUUqaPJnNX6XZ)
   - [Video 2](https://youtu.be/Phtq6VvThDI?si=L8YyoYfykKMHK6rJ)
-  - [Java Basics](https://www.youtube.com/playlist?list=PL9gnSGHSqcnr_DxHsP7AW9ftq0AtAyYqJ): Video 1 - 12, 21, 37, 38
+  - [Java Basics](https://www.youtube.com/playlist?list=PL9gnSGHSqcnr_DxHsP7AW9ftq0AtAyYqJ) : Video 1 - 12, 21, 37, 38
   - [Optional OOP in Java](https://youtube.com/playlist?list=PL9gnSGHSqcno1G3XjUbwzXHL8_EttOuKk&si=5lwS6bEsIcMDjKD3)
 
 - My repos:
@@ -180,6 +180,7 @@
 1. TypeScript (JavaScript is **NOT** enough) based frontend and backend
 2. Python based backend
 3. Optional: [Go](https://www.youtube.com/playlist?list=PLRAV69dS1uWQGDQoBYMZWKjzuhCaOnBpa) based backend - good to learn though for Cloud and Backend stuff!
+4. Optional/Depends: [Java Backend by Lovepreet Singh](https://youtube.com/playlist?list=PL7CBVLpg0zqeJTCCuU99RW1TMn8_Ii15n&si=ISSTdO-psCA8cR_8)
 
 ---
 
@@ -270,6 +271,7 @@
 17. [TypeScript porting to GO!](https://youtu.be/pNlq-EVld70?si=oO9XcSrynBpKVWhO)
 18. [Devops based stuff](https://youtube.com/playlist?list=PLAdTNzDIZj_8CAr71KAH9H9E1VTvywyxn&si=Sf_82GXcw4ovZWx-)
 19. [DevOps Shack](https://www.youtube.com/@devopsshack)
+20. [Lovepreet Singh](https://www.youtube.com/@SinghDevHub)
 
 ---
 
@@ -318,19 +320,29 @@
 
 # Core Computer Science Fundamentals
 
-- [C](https://youtu.be/ZSPZob_1TOk?si=JdaG7eCNVnAY4W7w)
-  1. [C in depth by Lovepreet Singh](https://youtu.be/lpDFGeqjvbI)
-  2. [CMake Practical Guide][cmake-guide]
-  - Optional: [C projects and fundamentals by Dr. Jonas Birch](https://youtube.com/playlist?list=PLdNUbYq5poiW6cumyg2w35fI9w9ivfZcD&si=HGr52Uv_HGrX93e4)
-- [Database Management System Theory](https://youtu.be/dl00fOOYLOM?si=gH_DMcelYyAoIoDY)
-- [Operating Systems Theory](https://youtu.be/3obEP8eLsCw?si=QZRLpyZtRZ7gEnix)
-  - **THE OG BEST RESOURCE**: [Applied Operating System by Lovepreet Singh](https://youtube.com/playlist?list=PL7CBVLpg0zqfIdcwDNa5c2xbhvK4crNqc&si=euuUk5miaWXg_lF8)
-- [Computer Networking Basics](https://youtu.be/IPvYjXCsTg8?si=NckRALP3SygJo6RS)
-  - [Computer Networking Theory in depth](https://youtu.be/PhjHXeMNpp8?si=eqnhEIvg6g9GGtQA)
-  - [Group Chat App - Socket Programming in C](https://youtu.be/KEiur5aZnIM)
-- [Compiler Design Theory](https://youtu.be/OQCjakjCJu4?si=qxXl-AGHOC5FVXrx)
-  - [CMake][cmake-guide] and [CPP development basics](https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb) is required for the resource listed below, for the CPP development basics, follow the learn as you go technique,i.e., if you don't understand something from the resource below then checkout this playlist, learn it and move forward. Also, use Google and AI extensively to ask and understand!
-    - [Creating your own compiler in C++](https://youtube.com/playlist?list=PLUDlas_Zy_qC7c5tCgTMYq2idyyT241qs&si=aSzezw-zlFDEeFwQ)
+1. [C](https://youtu.be/ZSPZob_1TOk?si=JdaG7eCNVnAY4W7w)
+
+   - [C in depth by Lovepreet Singh](https://youtu.be/lpDFGeqjvbI)
+   - [CMake Practical Guide][cmake-guide]
+   - Optional: [C projects and fundamentals by Dr. Jonas Birch](https://youtube.com/playlist?list=PLdNUbYq5poiW6cumyg2w35fI9w9ivfZcD&si=HGr52Uv_HGrX93e4)
+
+2. [Java Basics](https://www.youtube.com/playlist?list=PL9gnSGHSqcnr_DxHsP7AW9ftq0AtAyYqJ) : Video 1 - 12, 21, 37, 38
+
+3. [Database Management System Theory](https://youtu.be/dl00fOOYLOM?si=gH_DMcelYyAoIoDY)
+
+4. [Operating Systems Theory](https://youtu.be/3obEP8eLsCw?si=QZRLpyZtRZ7gEnix)
+
+   - **THE OG BEST RESOURCE**: [Applied Operating System by Lovepreet Singh](https://youtube.com/playlist?list=PL7CBVLpg0zqfIdcwDNa5c2xbhvK4crNqc&si=euuUk5miaWXg_lF8)
+
+5. [Computer Networking Basics](https://youtu.be/IPvYjXCsTg8?si=NckRALP3SygJo6RS)
+
+   - [Computer Networking Theory in depth](https://youtu.be/PhjHXeMNpp8?si=eqnhEIvg6g9GGtQA)
+   - [Group Chat App - Socket Programming in C](https://youtu.be/KEiur5aZnIM)
+
+6. [Compiler Design Theory](https://youtu.be/OQCjakjCJu4?si=qxXl-AGHOC5FVXrx)
+
+   - [CMake][cmake-guide] and [CPP development basics](https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb) is required for the resource listed below, for the CPP development basics, follow the learn as you go technique,i.e., if you don't understand something from the resource below then checkout this playlist, learn it and move forward. Also, use Google and AI extensively to ask and understand!
+     - [Creating your own compiler in C++](https://youtube.com/playlist?list=PLUDlas_Zy_qC7c5tCgTMYq2idyyT241qs&si=aSzezw-zlFDEeFwQ)
 
 ---
 
