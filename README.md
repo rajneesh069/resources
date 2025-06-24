@@ -193,54 +193,63 @@
    - [JavaScript for Interviews Part 1](https://youtube.com/playlist?list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP&si=n1pZASjAKr6mLDPT)
    - [JavaScript for Interviews Part 2](https://youtube.com/playlist?list=PLlasXeu85E9eWOpw9jxHOQyGMRiBZ60aX&si=sR6DuFYmAaHh2-oB)
 2. Learn [TypeScript](https://youtu.be/30LWjhZzg50) - **NEVER USE JS AGAIN**
-   - [Some TS tips](https://youtu.be/lraHlXpuhKs?si=mK7_IBJvDwUTT-XR)
    - Advice: After completing TS, opt for TypeScript in each project, even if the tutorial is in JavaScript. You should practice writing TS from Day 1 and ask [ChatGPT](https://chatgpt.com)/[Grok](https://grok.com/?referrer=website) for the types you don't know/if they don't make sense.
+   - [Proper way to use Typescript by Theo Browne](https://youtu.be/RmGHnYUqQ4k?si=DuNzh1eeHMrteYv3)
+   - [Some TS tips](https://youtu.be/lraHlXpuhKs?si=mK7_IBJvDwUTT-XR)
 3. Learn the MERN stack (You can go for MEAN stack as well, A stands for Angular, then Next.js isn't required)
    - [React.js](https://youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsL4hTnJIrtige&si=0ewB2weoSF-pU3LR)
    - [Node.js + Express.js + MongoDB](https://youtube.com/playlist?list=PLu71SKxNbfoBGh_8p_NS-ZAh6v7HhYqHW&si=dP2vWWYbE_ZQd0J7)
    - [Understand `React.memo`(the difference between `useMemo` and `React.memo`), `useCallback` and the new react compiler's benefits](https://youtu.be/INLq9RPAYUw)
 4. Learn [Tanstack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
+
    - Use `vite` to initialize projects. CRA(create-react-app) has been deprecated and strongly NOT recommended to use.
+
    1. [Why use it? - Part 1](https://youtu.be/xIflplz925Y)
    2. [Why use it? - Part 2](https://youtu.be/vxkbf5QMA2g)
    3. [How to use it?](https://youtu.be/GEeBG7AoQdM)
-5. Learn [Next.js](https://nextjs.org/learn) + Tailwind CSS
+
+5. [What is zod, how it works and why use it? tRPC uses it and why migrate to it later!](https://youtu.be/o4h8PUVy5J8?si=jNXh8NT44ELmqzkJ)
+
+   - This is very important, and understand what's the difference between compile time and runtime checks, and TS and Zod do which one.
+   - [Learn Zod!](https://youtu.be/L6BE-U3oy80)
+
+6. Learn [Next.js](https://nextjs.org/learn) + Tailwind CSS
    - [Next.js Cookies and Server Components](https://youtu.be/ejO8V5vt-7I)
    - [FullStack Next.js by Hitesh Choudhary](https://youtube.com/playlist?list=PLu71SKxNbfoBAaWGtn9GA2PTw0HO0tXzq&si=QQw4v0MMMr8aoz26)
    - [Another Project by Hitesh Choudhary](https://youtube.com/playlist?list=PLu71SKxNbfoDWGIwaEwhTUR40AbH8qsTo&si=VA9MQvJXbj0AmsXE)
    - [One More Project by Hitesh Choudhary](https://youtube.com/playlist?list=PLu71SKxNbfoBwut0coTT46oHz8q6xl2tO&si=SnsOwGGPWjXASHCl)
    - [Next.js Nuances](https://youtu.be/5QP0mvrJkiY?si=pZdkzh7CInzYzmIb)
-6. Understand what are [Server Components](https://youtu.be/VIwWgV3Lc6s?si=D48qZjwv6lvHNppD) and how to use them
-7. Learn [Prisma ORM](https://www.prisma.io/) and a SQL database(PostgreSQL recommended - [Neon](https://neon.tech/) for remote hosting)
+7. Understand what are [Server Components](https://youtu.be/VIwWgV3Lc6s?si=D48qZjwv6lvHNppD) and how to use them
+8. Learn [Prisma ORM](https://www.prisma.io/) and a SQL database(PostgreSQL recommended - [Neon](https://neon.tech/) for remote hosting)
    - Recommendation: Remove the `output` field from `generator client` portion of schema.prisma. The field causes unknown and unwanted errors as the wasm.js file contains `require()` syntax which is forbidden in modern TS syntax, could be disabled by `.eslintignore` but that's another hassle.
    - [Video 1](https://youtu.be/QXxy8Uv1LnQ?si=8AyGxRlDi1jzf83A)
    - [Video 2](https://youtu.be/RebA5J-rlwg?si=DubInABLgjQPpoPW)
-8. Learn how to use a UI library (Recommended: [ShadCN/UI](https://ui.shadcn.com/docs))
-9. Learn how to use an Auth library with Next.js (Recommended: NextAuth also known as Auth.js and then move to Clerk.js)
-   - [Next.js authentication from scratch](https://youtu.be/yoiBv0K6_1U?si=zYXo9G3JdxTK6mAG)
-   - [Auth.js Guide](https://youtu.be/mXYeQFj2A8w?si=xJhJHQMvvBy16MTi)
-   - [NextAuth with MongoDB](https://youtube.com/playlist?list=PLu71SKxNbfoCXO80Z4miZHTL5GxfFbz7A&si=VZqk4RfNLU_5oFwY)
-10. Learn [tRPC router](https://youtu.be/S6rcrkbsDI0?si=fweD-EBEqj6jGqqt)
+9. Learn how to use a UI library (Recommended: [ShadCN/UI](https://ui.shadcn.com/docs))
+10. Learn how to use an Auth library with Next.js (Recommended: NextAuth also known as Auth.js and then move to Clerk.js)
+    - [Next.js authentication from scratch](https://youtu.be/yoiBv0K6_1U?si=zYXo9G3JdxTK6mAG)
+    - [Auth.js Guide](https://youtu.be/mXYeQFj2A8w?si=xJhJHQMvvBy16MTi)
+    - [NextAuth with MongoDB](https://youtube.com/playlist?list=PLu71SKxNbfoCXO80Z4miZHTL5GxfFbz7A&si=VZqk4RfNLU_5oFwY)
+11. Learn [tRPC router](https://youtu.be/S6rcrkbsDI0?si=fweD-EBEqj6jGqqt)
     - [tRPC by Web Dev Simplified](https://youtu.be/UfUbBWIFdJs?si=EwZOMKHofF-azdFC)
-11. Understand and start using the [T3 Stack](https://create.t3.gg/)
+12. Understand and start using the [T3 Stack](https://create.t3.gg/)
     - [T3 stack tutorial by Theo Browne(Creator of T3 stack)](https://youtu.be/d5x0JCZbAJs?si=ABUeGTqNWHThCIiE)
     - [Another tutorial by Theo Browne](https://youtu.be/c-hKSbzooAg?si=qHylZyqIQsDGHsWt)
-12. Learn [Hono.js](https://hono.dev/) and understand Workers and other runtimes of platforns like AWS and what problems does Hono.js solve!
+13. Learn [Hono.js](https://hono.dev/) and understand Workers and other runtimes of platforns like AWS and what problems does Hono.js solve!
     - [Video](https://youtu.be/AcQm4x5dxeU?si=oB_Zb2bvCk_18kaC)
-13. Learn [Redis](https://youtu.be/Vx2zPMPvmug) for caching
+14. Learn [Redis](https://youtu.be/Vx2zPMPvmug) for caching
 
     - [Harkirat Singh's Complete Redis + WebSockets Course](https://youtu.be/IJkYipYNEtI?si=bVXeGJhOPjG37E55)
 
-14. Learn Docker for containerizing the apps you make
+15. Learn Docker for containerizing the apps you make
     - [Docker Part 1](https://youtu.be/31k6AtW-b3Y?si=oJUlGwEJo_dnb6H7)
     - [Docker Part 2](https://youtu.be/xPT8mXa-sJg?si=zmJ0DoewUVWoch2a)
     - [Docker Repository](https://github.com/rajneesh069/docker-demo)
-15. Learn how to deploy(using [GitHub Workflows and CI/CD](https://youtu.be/icZUzgtz_d8?si=wJqyD5R7MsB-ZC9L)) the container on an Amazon EC2 instance, and then how to manage certificates using certbot
+16. Learn how to deploy(using [GitHub Workflows and CI/CD](https://youtu.be/icZUzgtz_d8?si=wJqyD5R7MsB-ZC9L)) the container on an Amazon EC2 instance, and then how to manage certificates using certbot
     - [CI/CD Project](https://youtu.be/NnkUGzaqqOc?si=K6JCpb_qth-lmNk_)
-16. Learn why we need a [Reverse Proxy](https://youtu.be/zmrhxrYxonE?si=uDihswg_vLioZVjX) like `nginx` and how to integrate it on the server side
-17. Learn [WebSockets](https://youtu.be/7WQ2EbXLfLI?si=4L7CqJAoC9A5qAHy), [Long Polling](https://youtu.be/_CCyMWSZNU4?si=0EHYk2ttohLAXld8) and [Server Sent Events](https://youtu.be/_CCyMWSZNU4?si=0EHYk2ttohLAXld8)
+17. Learn why we need a [Reverse Proxy](https://youtu.be/zmrhxrYxonE?si=uDihswg_vLioZVjX) like `nginx` and how to integrate it on the server side
+18. Learn [WebSockets](https://youtu.be/7WQ2EbXLfLI?si=4L7CqJAoC9A5qAHy), [Long Polling](https://youtu.be/_CCyMWSZNU4?si=0EHYk2ttohLAXld8) and [Server Sent Events](https://youtu.be/_CCyMWSZNU4?si=0EHYk2ttohLAXld8)
     - [**NOT** Just Another Chat App](https://www.youtube.com/watch?v=pfZT6Opgy4o)
-18. Optional: Kubernetes for management of multiple Docker containers
+19. Optional: Kubernetes for management of multiple Docker containers
     - [Kubernetes Masterclass](https://youtu.be/L8n_HYDnq_I?si=yHTFQNshHoFMmVX2)
 
 ## Resources to learn TS based stuff more/follow
