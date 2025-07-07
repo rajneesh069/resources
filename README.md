@@ -142,8 +142,11 @@
     1. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0pcIDCZnxhv0LkHf5KzG9zp&si=LfEeLQHVWcJWM-pn)
 
 16. Strings
+
     1. [Striver's A2Z DSA Sheet](https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2)
     2. Some Kunal Kushwaha videos for named algorithms - search for them
+
+17. [Hashing Theory](https://youtu.be/TLk7_Ia3rzQ)
 
 - These are the resources I am using to either learn from or have learnt various topics from, to understand concepts and practice.
 
