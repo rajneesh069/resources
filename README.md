@@ -122,6 +122,10 @@
 
 13. Greedy Algorithm
 
+    - Sometimes, you could be confused and think that a greedy problem is a recursive/dp problem because recursion/dp allows you to go through all the possibilities and then find the min/max among them, but for greedy the constraints will be big and for recursion/dp the constraints aren't as big, so this could be a good hint to make an educated guess if the problem is of recursion/dp or greedy algorithm.
+
+    - Greedy algorithm is a constructive algorithm, i.e., you make the algorithm on the go depending on the question.
+
     1. [Coder Army's Single Shot](https://youtu.be/-wqKvpYGg1I)
 
     - Optional: [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0rF1w2Koyh78zafB0cz7tea&si=5n-9Zr1RR6VG3FKA)
