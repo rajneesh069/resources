@@ -120,13 +120,14 @@
 
 14. Trees and Graphs
 
-    - **Hack**: Use the concept of Adjacency Lists even in the Binary Tree problems, because trees are special case of graphs and NOT separate. **<u>Trees = Graphs with no cycles.</u>**
+    - **Hack**: Use the concept of <u>Adjacency Lists even in the Binary Tree problems</u>, because trees are special case of graphs and NOT separate. **<u>Trees = Graphs with no cycles.</u>**
 
-    0. [Kunal Kushawaha](https://youtu.be/4s1Tcvm00pA?si=WXkM9myuQNP78DrN) - Theory Video
-    1. **Best Resource**: [Luv's Playlist](https://www.youtube.com/playlist?list=PLauivoElc3ggagradg8MfOZreCMmXMmJ-) - from 81 to 102
-    2. [Love Babbar's Playlist](https://youtube.com/playlist?list=PLDzeHZWIZsTobi35C3I-tKB3tRDX6YxuA&si=wsTwn_AtITtJtenK)
-    3. Probably Optional: [Striver's Playlist for Named Algorithms](https://youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&si=7AlKq8lEyHMR4UiY)
-    4. Probably Optional: [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWcn5bKG8UMI0St2D5EmQszx&si=O9nTzjlpyCduXqq5)
+    0. [Kunal Kushawaha](https://youtu.be/4s1Tcvm00pA?si=WXkM9myuQNP78DrN) - Theory Video of Trees
+    1. **Best Resource to start with**: [Luv's Playlist](https://www.youtube.com/playlist?list=PLauivoElc3ggagradg8MfOZreCMmXMmJ-) - from 81 to 102
+    2. [Binary Trees Practice Video by Kunal Kushwaha](https://youtu.be/9D-vP-jcc-Y?list=PL9gnSGHSqcnqfctdbCQKaw5oZ9Up2cmsq)
+    3. [Graphs in Depth by Aditya Verma](https://youtube.com/playlist?list=PL_z_8CaSLPWcn5bKG8UMI0St2D5EmQszx&si=O9nTzjlpyCduXqq5)
+    4. [Use Striver's Playlist for learning Named Algorithms of Graphs](https://youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&si=7AlKq8lEyHMR4UiY)
+    5. Probably Optional: [Love Babbar's Playlist](https://youtube.com/playlist?list=PLDzeHZWIZsTobi35C3I-tKB3tRDX6YxuA&si=wsTwn_AtITtJtenK)
 
 15. Tries:
 
