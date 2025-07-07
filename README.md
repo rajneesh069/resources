@@ -257,22 +257,22 @@
     - [T3 stack tutorial by Theo Browne(Creator of T3 stack)](https://youtu.be/d5x0JCZbAJs?si=ABUeGTqNWHThCIiE)
     - [Another tutorial by Theo Browne](https://youtu.be/c-hKSbzooAg?si=qHylZyqIQsDGHsWt)
 
-13. Learn [Hono.js](https://hono.dev/) and understand Workers and other runtimes of platforms like AWS and what problems does Hono.js solve!
-    - [Video](https://youtu.be/AcQm4x5dxeU?si=oB_Zb2bvCk_18kaC)
-14. Learn [Redis](https://youtu.be/Vx2zPMPvmug) for caching
-
-    - [Harkirat Singh's Complete Redis + WebSockets Course](https://youtu.be/IJkYipYNEtI?si=bVXeGJhOPjG37E55)
-
-15. Learn Docker for containerizing the apps you make
+13. Learn Docker for containerizing the apps you make
     - [Docker Part 1](https://youtu.be/31k6AtW-b3Y?si=oJUlGwEJo_dnb6H7)
     - [Docker Part 2](https://youtu.be/xPT8mXa-sJg?si=zmJ0DoewUVWoch2a)
     - [Docker Repository](https://github.com/rajneesh069/docker-demo)
-16. Learn [how to deploy](https://youtu.be/gViEtIJ1DCw) your website
+14. Learn [how to deploy](https://youtu.be/gViEtIJ1DCw) your website
 
     - [GitHub Workflows and CI/CD](https://youtu.be/icZUzgtz_d8?si=wJqyD5R7MsB-ZC9L)
     - [CI/CD Project](https://youtu.be/NnkUGzaqqOc?si=K6JCpb_qth-lmNk_)
 
     - Learn how to manage certificates using certbot
+
+15. Learn [Hono.js](https://hono.dev/) and understand Workers and other runtimes of platforms like AWS, Cloudflare, etc. and what problems does Hono.js solve!
+    - [Video](https://youtu.be/AcQm4x5dxeU?si=oB_Zb2bvCk_18kaC)
+16. Learn [Redis](https://youtu.be/Vx2zPMPvmug) for caching
+
+    - [Harkirat Singh's Complete Redis + WebSockets Course](https://youtu.be/IJkYipYNEtI?si=bVXeGJhOPjG37E55)
 
 17. Learn why we need a [Reverse Proxy](https://youtu.be/zmrhxrYxonE?si=uDihswg_vLioZVjX) like `nginx` and how to integrate it on the server side
 18. Learn [WebSockets](https://youtu.be/7WQ2EbXLfLI?si=4L7CqJAoC9A5qAHy), [Long Polling](https://youtu.be/_CCyMWSZNU4?si=0EHYk2ttohLAXld8) and [Server Sent Events](https://youtu.be/_CCyMWSZNU4?si=0EHYk2ttohLAXld8)
