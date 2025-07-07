@@ -251,6 +251,7 @@
     - [NextAuth with MongoDB](https://youtube.com/playlist?list=PLu71SKxNbfoCXO80Z4miZHTL5GxfFbz7A&si=VZqk4RfNLU_5oFwY)
 11. Learn tRPC router
     - [tRPC by Web Dev Simplified](https://youtu.be/UfUbBWIFdJs?si=EwZOMKHofF-azdFC)
+    - [tRPC with Next.js](https://youtu.be/qCLV0Iaq9zU?si=tskrSVuB1C2udK-O)
 12. Understand and start using the [T3 Stack](https://create.t3.gg/)
 
     - Would **strongly recommend to switch to this stack** once you're done with the stuff mentioned above!
