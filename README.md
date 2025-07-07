@@ -275,7 +275,11 @@
 17. Learn why we need a [Reverse Proxy](https://youtu.be/zmrhxrYxonE?si=uDihswg_vLioZVjX) like `nginx` and how to integrate it on the server side
 18. Learn [WebSockets](https://youtu.be/7WQ2EbXLfLI?si=4L7CqJAoC9A5qAHy), [Long Polling](https://youtu.be/_CCyMWSZNU4?si=0EHYk2ttohLAXld8) and [Server Sent Events](https://youtu.be/_CCyMWSZNU4?si=0EHYk2ttohLAXld8)
     - [**NOT** Just Another Chat App](https://www.youtube.com/watch?v=pfZT6Opgy4o)
-19. Optional: Kubernetes for management of multiple Docker containers
+19. Learn how to handle Video Transcoding, Streaming and Upload
+    - [Video Uploading and Adaptive HLS Bitrate Streaming](https://youtu.be/LMYWGpt6ppM?si=XenMjrisovkeUOdE)
+    - [Building a project based on Video Streaming](https://youtu.be/Hn0uZwjghng?si=idTeYzBUm4bO1JyD)
+    - [Video Transcoding](https://youtu.be/WpfI9ge5HYE)
+20. Optional: Kubernetes for management of multiple Docker containers
     - [Kubernetes Masterclass](https://youtu.be/L8n_HYDnq_I?si=yHTFQNshHoFMmVX2)
 
 ## Resources to learn TS based stuff more/follow
