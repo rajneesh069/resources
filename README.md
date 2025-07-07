@@ -44,7 +44,7 @@
 
 - Code in C++, but be comfortable with Java, as some resources are in Java and you **must** be able to understand it and then convert the code to CPP.
 - DSA is language agnostic ;&#41;
-- Follow [**Striver's A2Z SDE Sheet**](https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2) and that same sequence.
+- Follow [**Striver's A2Z SDE Sheet**](https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2).
 - It contains 450 questions, all of them must be in your mind including all the topics listed in the sheet.
 
 ### Resources to study all the topics
@@ -87,43 +87,46 @@
    3. Optional: [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&si=Fp7k88ReMFYloivx)
    4. Optional: [Kunal Kushwaha](https://youtube.com/playlist?list=PL9gnSGHSqcnp39cTyB1dTZ2pJ04Xmdrod&si=Fdi_KFrHAPOVe9Bx)
 
-8. Linked Lists
+8. Dynamic Programming(DP)
+
+   - **<u>DP is Recursion on steriods</u>**, that's it!
+   - If you encounter some tree/graph related questions, leave them for now and come back to them later once you've learned trees, graphs and their algorithms.
+
+   1. **Best Resource**: [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWekqhdCPmFohncHwz8TY2Go&si=dp2MxDdxSO46nK3r)
+   2. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0qUlt5H_kiKYaNSqJ81PMMY&si=8z6iWM5gBw4Km-NJ)
+
+9. Linked Lists
    1. [Kunal Kushwaha - Video 1](https://youtu.be/58YbpRDc4yw?si=lHrUBvgikc3WDTTK)
    2. [Kunal Kushwaha - Video 2](https://youtu.be/70tx7KcMROc?si=kL_i56zsTnF_XNyk)
    3. [Striver](https://youtube.com/playlist?list=PLgUwDviBIf0rAuz8tVcM0AymmhTRsfaLU&si=0XUi4HamUc7lUbC4)
-9. Stack and Queue
+10. Stack and Queue
 
-   1. [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWdeOezg68SKkeLN4-T_jNHd&si=oIcacyjp0SeuDLDW)
-   2. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0pOd5zvVVSzgpo6BaCpHT9c&si=hH6pYTLcrneRzhcy)
+    1. [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWdeOezg68SKkeLN4-T_jNHd&si=oIcacyjp0SeuDLDW)
+    2. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0pOd5zvVVSzgpo6BaCpHT9c&si=hH6pYTLcrneRzhcy)
 
-10. Sliding Window and Two Pointers
+11. Sliding Window and Two Pointers
 
     1. [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWeM8BDJmIYDaoQ5zuwyxnfj&si=6xeKbOrWT5J7Ne4-)
     2. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0q7vrFA_HEWcqRqMpCXzYAL&si=C1kTItp5NMcmr4-V)
 
-11. Heap
+12. Heap
 
     0. [Kunal Kushwaha](https://youtu.be/Qf-TDPr0nYw?si=sOy1fnK9O1ST3__j) - Theory Video
     1. [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWdtY9W22VjnPxG30CXNZpI9&si=h6ZuCcHTT3pQq2O8)
 
-12. Greedy Algorithm
+13. Greedy Algorithm
 
     1. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0rF1w2Koyh78zafB0cz7tea&si=5n-9Zr1RR6VG3FKA)
 
-13. Trees and Graphs
+14. Trees and Graphs
 
-    - **Hack**: Use the concept of Adjacency List even in the Binary Tree problems, see trees as special case of graphs and NOT separate.
+    - **Hack**: Use the concept of Adjacency Lists even in the Binary Tree problems, because trees are special case of graphs and NOT separate. **<u>Trees = Graphs with no cycles.</u>**
 
     0. [Kunal Kushawaha](https://youtu.be/4s1Tcvm00pA?si=WXkM9myuQNP78DrN) - Theory Video
     1. **Best Resource**: [Luv's Playlist](https://www.youtube.com/playlist?list=PLauivoElc3ggagradg8MfOZreCMmXMmJ-) - from 81 to 102
     2. [Love Babbar's Playlist](https://youtube.com/playlist?list=PLDzeHZWIZsTobi35C3I-tKB3tRDX6YxuA&si=wsTwn_AtITtJtenK)
     3. Probably Optional: [Striver's Playlist for Named Algorithms](https://youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&si=7AlKq8lEyHMR4UiY)
     4. Probably Optional: [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWcn5bKG8UMI0St2D5EmQszx&si=O9nTzjlpyCduXqq5)
-
-14. Dynamic Programming
-
-    1. **Best Resource**: [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWekqhdCPmFohncHwz8TY2Go&si=dp2MxDdxSO46nK3r)
-    2. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0qUlt5H_kiKYaNSqJ81PMMY&si=8z6iWM5gBw4Km-NJ)
 
 15. Tries:
 
@@ -208,10 +211,13 @@
 4. Learn [Tanstack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
 
    - Use `vite` to initialize react projects from now on. CRA(create-react-app) has been deprecated and strongly NOT recommended to use.
+   - The why?
 
-   1. [Why use it? - Part 1](https://youtu.be/xIflplz925Y)
-   2. [Why use it? - Part 2](https://youtu.be/vxkbf5QMA2g)
-   3. [How to use it?](https://youtu.be/GEeBG7AoQdM)
+     - [Part 1](https://youtu.be/xIflplz925Y)
+     - [Part 2](https://youtu.be/vxkbf5QMA2g)
+
+   - The how?
+     - [How to use it?](https://youtu.be/GEeBG7AoQdM)
 
 5. [What is zod, how it works and why use it? tRPC uses it and why migrate to it later!](https://youtu.be/o4h8PUVy5J8?si=jNXh8NT44ELmqzkJ)
 
@@ -259,8 +265,13 @@
     - [Docker Part 1](https://youtu.be/31k6AtW-b3Y?si=oJUlGwEJo_dnb6H7)
     - [Docker Part 2](https://youtu.be/xPT8mXa-sJg?si=zmJ0DoewUVWoch2a)
     - [Docker Repository](https://github.com/rajneesh069/docker-demo)
-16. Learn how to deploy(using [GitHub Workflows and CI/CD](https://youtu.be/icZUzgtz_d8?si=wJqyD5R7MsB-ZC9L)) the container on an Amazon EC2 instance, and then how to manage certificates using certbot
+16. Learn [how to deploy](https://youtu.be/gViEtIJ1DCw) your website
+
+    - [GitHub Workflows and CI/CD](https://youtu.be/icZUzgtz_d8?si=wJqyD5R7MsB-ZC9L)
     - [CI/CD Project](https://youtu.be/NnkUGzaqqOc?si=K6JCpb_qth-lmNk_)
+
+    - Learn how to manage certificates using certbot
+
 17. Learn why we need a [Reverse Proxy](https://youtu.be/zmrhxrYxonE?si=uDihswg_vLioZVjX) like `nginx` and how to integrate it on the server side
 18. Learn [WebSockets](https://youtu.be/7WQ2EbXLfLI?si=4L7CqJAoC9A5qAHy), [Long Polling](https://youtu.be/_CCyMWSZNU4?si=0EHYk2ttohLAXld8) and [Server Sent Events](https://youtu.be/_CCyMWSZNU4?si=0EHYk2ttohLAXld8)
     - [**NOT** Just Another Chat App](https://www.youtube.com/watch?v=pfZT6Opgy4o)
@@ -299,7 +310,7 @@
 
 ---
 
-### 2. Python Based
+### 2. Python Based Backend
 
 0. For frontend, one cannot escape the wrath of TypeScript
 1. Learn [Python](https://www.youtube.com/playlist?list=PLu71SKxNbfoBsMugTFALhdLlZ5VOqCg2s)
