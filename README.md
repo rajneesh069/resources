@@ -117,7 +117,9 @@
 
 13. Greedy Algorithm
 
-    1. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0rF1w2Koyh78zafB0cz7tea&si=5n-9Zr1RR6VG3FKA)
+    1. [Coder Army's Single Shot](https://youtu.be/-wqKvpYGg1I)
+
+    - Optional: [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0rF1w2Koyh78zafB0cz7tea&si=5n-9Zr1RR6VG3FKA)
 
 14. Trees and Graphs
 
@@ -128,7 +130,7 @@
     2. [Binary Trees Practice Video by Kunal Kushwaha](https://youtu.be/9D-vP-jcc-Y?list=PL9gnSGHSqcnqfctdbCQKaw5oZ9Up2cmsq)
     3. [Graphs in Depth by Aditya Verma](https://youtube.com/playlist?list=PL_z_8CaSLPWcn5bKG8UMI0St2D5EmQszx&si=O9nTzjlpyCduXqq5)
     4. [Use Striver's Playlist for learning Named Algorithms of Graphs](https://youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&si=7AlKq8lEyHMR4UiY)
-    5. Probably Optional: [Love Babbar's Playlist](https://youtube.com/playlist?list=PLDzeHZWIZsTobi35C3I-tKB3tRDX6YxuA&si=wsTwn_AtITtJtenK)
+    5. Optional: [Love Babbar's Playlist](https://youtube.com/playlist?list=PLDzeHZWIZsTobi35C3I-tKB3tRDX6YxuA&si=wsTwn_AtITtJtenK)
 
 15. Tries:
 
