@@ -226,7 +226,9 @@
    - This is very important, and understand what's the difference between compile time and runtime checks, and TS and Zod do which one.
    - [Learn Zod!](https://youtu.be/L6BE-U3oy80)
 
-6. Learn [Next.js](https://nextjs.org/learn) + Tailwind CSS
+6. Learn how to use a UI library with React and Next.js (Recommended: [ShadCN/UI](https://ui.shadcn.com/docs))
+
+7. Learn [Next.js](https://nextjs.org/learn) + Tailwind CSS
 
    - [FullStack Next.js Tutorial + Project by Hitesh Choudhary](https://youtube.com/playlist?list=PLu71SKxNbfoBAaWGtn9GA2PTw0HO0tXzq&si=QQw4v0MMMr8aoz26)
    - [Next.js Cookies and Server Components](https://youtu.be/ejO8V5vt-7I)
@@ -234,16 +236,14 @@
    - [One More Project by Hitesh Choudhary](https://youtube.com/playlist?list=PLu71SKxNbfoBwut0coTT46oHz8q6xl2tO&si=SnsOwGGPWjXASHCl)
    - [Next.js Nuances](https://youtu.be/5QP0mvrJkiY?si=pZdkzh7CInzYzmIb)
 
-7. Understand what are [Server Components in Next.js](https://youtu.be/VIwWgV3Lc6s?si=D48qZjwv6lvHNppD) and how to use them
+8. Understand what are [Server Components in Next.js](https://youtu.be/VIwWgV3Lc6s?si=D48qZjwv6lvHNppD) and how to use them
 
-8. Learn [SQL](https://youtu.be/OT1RErkfLNQ) and then [Prisma ORM](https://www.prisma.io/)
+9. Learn [SQL](https://youtu.be/OT1RErkfLNQ) and then [Prisma ORM](https://www.prisma.io/)
 
    - [Prisma Tutorial Video 1](https://youtu.be/RebA5J-rlwg?si=DubInABLgjQPpoPW)
    - [Prisma Tutorial Video 2](https://youtu.be/QXxy8Uv1LnQ?si=8AyGxRlDi1jzf83A)
    - Recommendation: Remove the `output` field from `generator client` portion of schema.prisma. The field causes unknown and unwanted errors as the wasm.js file contains `require()` syntax which is forbidden in modern TS syntax, could be disabled by `.eslintignore` but that's another hassle.
    - PostgreSQL recommended - [Neon](https://neon.tech/) for remote hosting
-
-9. Learn how to use a UI library (Recommended: [ShadCN/UI](https://ui.shadcn.com/docs))
 
 10. Learn how to use an Auth library with Next.js (Recommended: NextAuth also known as Auth.js and then move to Clerk.js)
     - [Next.js authentication from scratch](https://youtu.be/yoiBv0K6_1U?si=zYXo9G3JdxTK6mAG)
