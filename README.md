@@ -82,11 +82,16 @@
 
    - To be good at recursion, you should spend atleast 15-20 days solely on it and then keep doing questions side by side later, as it'll help when you'll learn DP(Dynamic Programming).
 
-   0. [LeetCode Questions](https://leetcode.com/problem-list/recursion/) - for practice after learning
    1. **Best Resource**: [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWeT1ffjiImo0sYTcnLzo-wY&si=CBa323H9mwg5E8_W)
    2. [Luv's Playlist](https://www.youtube.com/playlist?list=PLauivoElc3ggagradg8MfOZreCMmXMmJ-) - from 25 to 27 then 46 to 48 and 56
-   3. Optional: [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&si=Fp7k88ReMFYloivx)
-   4. Optional: [Kunal Kushwaha](https://youtube.com/playlist?list=PL9gnSGHSqcnp39cTyB1dTZ2pJ04Xmdrod&si=Fdi_KFrHAPOVe9Bx)
+
+   - Backtracking is a part of recursion itself and NOTHING DIFFERENT OR NEW. It **resets the state of recursion wherever needed.**
+
+   3. [Backtracking by Aditya Verma](https://youtube.com/playlist?list=PL_z_8CaSLPWdbOTog8Jxk9XOjzUs3egMP&si=-Jla0611IPF1RLRk)
+   4. Optional: [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&si=Fp7k88ReMFYloivx)
+   5. Optional: [Kunal Kushwaha](https://youtube.com/playlist?list=PL9gnSGHSqcnp39cTyB1dTZ2pJ04Xmdrod&si=Fdi_KFrHAPOVe9Bx)
+
+   - Resource: [LeetCode Questions](https://leetcode.com/problem-list/recursion/) - for practice after learning
 
 8. Dynamic Programming(DP)
 
