@@ -62,11 +62,9 @@
 
 4. Binary Search
 
-   - **Hack**: Write it the `Love Babbar's` way(using `ans` variable always!), learn the concept of `predicate functions` thoroughly from `Luv` and apply them using the `Kunal's` video
-
-   0. [Love Babbar's Video](https://youtu.be/YJeoQBevNVo?si=2Io2HAWQ_cfpKA2z)
-   1. [Luv's Playlist](https://www.youtube.com/playlist?list=PLauivoElc3ggagradg8MfOZreCMmXMmJ-) - from 50 to 54
-   2. [Kunal Kushwaha](https://youtu.be/W9QJ8HaRvJQ?si=BI8jo9ZG57cf4Vee) - for practice
+   1. [Aditya Verma's Playlist](https://www.youtube.com/playlist?list=PL_z_8CaSLPWeYfhtuKHj-9MpYb6XQJ_f2)
+   2. [Luv's Playlist](https://www.youtube.com/playlist?list=PLauivoElc3ggagradg8MfOZreCMmXMmJ-) - from 50 to 54
+   3. [Kunal Kushwaha's video for practice](https://youtu.be/W9QJ8HaRvJQ?si=BI8jo9ZG57cf4Vee)
 
 5. Bit Manipulation
 
