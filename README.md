@@ -231,7 +231,8 @@
      - [Part 2](https://youtu.be/vxkbf5QMA2g)
 
    - The how?
-     - [How to use it?](https://youtu.be/GEeBG7AoQdM)
+     - [How to use it? - Part 1](https://youtu.be/mPaCnwpFvZY?si=3wKZDtPMwQkGE9E7)
+     - [How to use it? - Part 2](https://youtu.be/KkxPtimqaew)
 
 5. [What is zod, how it works and why use it? tRPC uses it and why migrate to it later!](https://youtu.be/o4h8PUVy5J8?si=jNXh8NT44ELmqzkJ)
 
