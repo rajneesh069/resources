@@ -678,3 +678,124 @@ Still — **you never get access to the raw JWT string** unless you manually par
 | Access raw token?         | ❌ Not through `useSession()` or `getServerSession()`                |
 | Want custom token fields? | ✅ Add in `jwt()`, then expose via `session()`                       |
 | Using database strategy?  | `jwt()` is **not** used for session; `session()` uses DB-backed data |
+
+# Some last moment notes
+
+## 1. Database Session Strategy — What NextAuth Does by Default
+
+- NextAuth **stores sessions and user info in your DB** (via the adapter).
+- When you call `getServerSession()` or `useSession()`, NextAuth fetches the session **and user record from the DB**.
+- The default `session()` callback receives a **fresh user object from the DB**.
+- So **basic user fields like `name`, `email`, and `image` are automatically available in session**.
+- However, **custom fields like `role`, `createdAt`, `updatedAt` — even if they exist in your DB — are NOT automatically included** in the session unless you do something extra.
+
+---
+
+## 2. Why Custom Fields Aren't Included by Default
+
+- The Prisma adapter **doesn't automatically merge every user DB column into the session object**.
+- **NextAuth only serializes the default user fields for performance and simplicity**.
+- Therefore, **to expose your custom fields (`role`, `createdAt`, etc.) to the session**, you need to **explicitly add them**.
+
+---
+
+## 3. How To Explicitly Add Custom Fields
+
+You have two main ways:
+
+### Option A: Use `session()` callback to fetch DB user info
+
+```ts
+callbacks: {
+  async session({ session, user }) {
+    // `user` here is usually incomplete or undefined depending on your setup.
+    // Safer to query DB manually:
+    const dbUser = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (dbUser) {
+      session.user.role = dbUser.role;
+      session.user.createdAt = dbUser.createdAt;
+      session.user.updatedAt = dbUser.updatedAt;
+    }
+
+    return session;
+  },
+}
+```
+
+- This means a DB query **on every session fetch** (every request).
+- No need for `jwt()` callback here.
+
+---
+
+### Option B: Use `jwt()` callback to enrich the token at sign-in and reuse
+
+```ts
+callbacks: {
+  async jwt({ token, user }) {
+    if (user) {
+      const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+      if (dbUser) {
+        token.role = dbUser.role;
+        token.createdAt = dbUser.createdAt;
+        token.updatedAt = dbUser.updatedAt;
+      }
+    }
+    return token;
+  },
+  session({ session, token }) {
+    session.user.role = token.role;
+    session.user.createdAt = token.createdAt;
+    session.user.updatedAt = token.updatedAt;
+    return session;
+  },
+}
+```
+
+- Here, the DB query happens **only at sign-in / token refresh**.
+- The data is cached in the JWT token.
+- Session reads from the token, no DB query on every request.
+- Better performance, but data can get stale until token refreshes.
+
+---
+
+## 4. What About OAuth Provider Tokens?
+
+- These **are not stored in the user DB record**, but in the `Account` table.
+- The default NextAuth flow **does not inject them into the session or JWT automatically**.
+- To use or refresh them, you must explicitly:
+
+  - Fetch them from DB or `account` param in `jwt()` callback,
+  - Store in JWT token,
+  - Refresh as needed,
+  - Expose in `session()` if needed.
+
+---
+
+## 5. Why Both Perspectives Are True
+
+| Statement You Heard                                                         | My Explanation                                                 |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| _"With DB sessions, jwt callback is not used."_                             | True for simple setups without custom fields or tokens.        |
+| _"To add custom fields like role, createdAt, etc., you need jwt callback."_ | True if you want to cache and reuse custom fields efficiently. |
+| _"Without jwt callback, you can do it in session with DB query."_           | Also true, but with extra DB hits on every request.            |
+
+---
+
+## 6. When To Choose What?
+
+| You want:                           | Use:                  | Pros                                         | Cons                              |
+| ----------------------------------- | --------------------- | -------------------------------------------- | --------------------------------- |
+| Simplicity, freshest data           | `session()` only      | Always latest DB state, easy to reason about | More DB queries, less performant  |
+| Cache custom fields for performance | `jwt()` + `session()` | Fewer DB queries, fast session retrieval     | Slightly stale data until refresh |
+
+---
+
+## Final Summary
+
+- **You don't have to implement the `jwt` callback to use database sessions.**
+- But **if you want to add and cache extra fields or provider tokens efficiently**, **implementing `jwt()` is the recommended approach.**
+- It's a performance vs. data-freshness trade-off.
+- You always **need to customize the `session()` callback to expose those fields to the client.**
