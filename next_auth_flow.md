@@ -85,7 +85,7 @@ Here's the step-by-step process:
     - NextAuth.js exchanges the `code` for `accessToken`, `refreshToken`, `expires_at`, `id_token` from Google's token endpoint.
     - It also uses the `accessToken` to fetch the user's `profile` (e.g., `name`, `email`, `image`) from Google's user info endpoint.
     - **Adapter Interaction (PrismaAdapter):**
-      - NextAuth.js uses the `profile` information to check if the user already exists in your `User` table (via `db.user.findUnique` typically).
+      - NextAuth.js uses the `profile` information to check if the user already exists in firstly the `Account` table and then using the `userId` if found then in your `User` table (via `db.user.findUnique` typically).
       - If not, it creates a new `User` record in your database.
       - It then creates/updates an `Account` record in your database, storing the `userId` linked to this `User`, along with `provider`, `providerAccountId`, and crucially, the `accessToken`, `refreshToken`, `expires_at`, `id_token` received from Google.
 
