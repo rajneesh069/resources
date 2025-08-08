@@ -572,3 +572,109 @@ Here's why and how:
     - Returns the `session` object ready for the client.
 
 **In summary:** While NextAuth.js provides some sensible defaults, for any fields beyond the very basic `id`, `name`, `email`, `image` (especially those specific to your database schema or provider tokens), you need to take control of the `jwt` and `session` callbacks. The `jwt` callback is where you enrich the data, and the `session` callback is where you expose that enriched data to your frontend.
+
+## ✅ 1. Is `session` what's available via `getServerSession()` and `useSession()`?
+
+**Yes, exactly.**
+
+- `getServerSession()` (Server Components or API routes)
+- `useSession()` (Client Components)
+
+Both give you the **final shaped session object**, based on the result of your `callbacks.session()`.
+
+```ts
+const session = await getServerSession(authConfig);
+// OR
+const { data: session } = useSession();
+```
+
+This object is **never the raw JWT** — it’s the result of running your `session()` callback.
+
+---
+
+## ✅ 2. Is `jwt` stored in a cookie even when using the "jwt" strategy?
+
+Yes — this is the core idea:
+
+- NextAuth’s **"jwt" strategy** means:
+
+  - The session is stored in a **JWT** inside an **HTTP-only cookie**.
+  - Not in the database.
+
+### Cookie name:
+
+- The JWT is stored in:
+
+  ```
+  next-auth.session-token
+  ```
+
+- It is **HTTP-only**, **Secure**, and **not accessible via JavaScript**.
+
+---
+
+## ✅ 3. In the "database" strategy, is the `jwt()` callback still used?
+
+Yes — but only **under specific circumstances**:
+
+- If you're using the **database session strategy** (i.e., `adapter + session.strategy = "database"`), then:
+
+  - Session info is stored in the DB (`Session` model)
+  - **`jwt()` is not used** for token creation
+  - Instead, `session()` builds the session object based on the DB-stored session
+
+### So:
+
+| Strategy     | Is `jwt()` used?                                     |
+| ------------ | ---------------------------------------------------- |
+| `"jwt"`      | ✅ Yes, creates token                                |
+| `"database"` | ❌ No (unless you're customizing for something else) |
+
+---
+
+## ✅ 4. Can I access the raw JWT in `getServerSession()` or `useSession()`?
+
+> ❌ **No — you cannot access the raw JWT directly via `getServerSession()` or `useSession()`**.
+
+### Why?
+
+- The JWT is stored in an **HTTP-only cookie**, meaning:
+
+  - 🔐 **JavaScript can’t read it** (good security!)
+  - ✅ It’s sent with every request automatically (via `cookie` header)
+  - ✅ NextAuth reads and **decodes + verifies** it server-side
+  - ✅ Then it passes the final `session()` result to your app
+
+If you want the **raw JWT** (e.g., to access fields not exposed in `session()`), you must:
+
+1. Include that field in the token in `jwt()` callback
+2. Pull it into `session()` manually
+
+```ts
+callbacks: {
+  jwt({ token, user }) {
+    if (user) token.role = user.role;
+    return token;
+  },
+  session({ session, token }) {
+    session.user.role = token.role;
+    return session;
+  },
+}
+```
+
+Still — **you never get access to the raw JWT string** unless you manually parse it from the cookie (not recommended).
+
+---
+
+## 🧠 Summary Table
+
+| Concept                   | Description                                                          |
+| ------------------------- | -------------------------------------------------------------------- |
+| `session()`               | Builds what `getServerSession()` / `useSession()` returns            |
+| `jwt()`                   | Builds token (only for JWT strategy)                                 |
+| Where is JWT stored?      | HTTP-only secure cookie (`next-auth.session-token`)                  |
+| Accessible in JS?         | ❌ No, not accessible directly (by design)                           |
+| Access raw token?         | ❌ Not through `useSession()` or `getServerSession()`                |
+| Want custom token fields? | ✅ Add in `jwt()`, then expose via `session()`                       |
+| Using database strategy?  | `jwt()` is **not** used for session; `session()` uses DB-backed data |
