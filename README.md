@@ -222,6 +222,7 @@
    - [Node.js + Express.js + MongoDB](https://youtube.com/playlist?list=PLu71SKxNbfoBGh_8p_NS-ZAh6v7HhYqHW&si=dP2vWWYbE_ZQd0J7)
    - [Understand `React.memo`(the difference between `useMemo` and `React.memo`), `useCallback` and the new react compiler's benefits](https://youtu.be/INLq9RPAYUw)
    - [Keeping components pure](https://react.dev/learn/keeping-components-pure)
+   - [useState vs useRef - using them the correct way](https://youtu.be/7wScZIUoRc0?si=80tITmqep9Djl6yY)
 4. Learn [Tanstack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
 
    - Use `vite` to initialize react projects from now on. CRA(create-react-app) has been deprecated and strongly NOT recommended to use.
