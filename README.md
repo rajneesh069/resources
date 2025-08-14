@@ -252,8 +252,9 @@
 
 8. Understand what are [Server Components in Next.js](https://youtu.be/VIwWgV3Lc6s?si=D48qZjwv6lvHNppD) and how to use them
 
-9. Learn [SQL](https://youtu.be/OT1RErkfLNQ) and then [Prisma ORM](https://www.prisma.io/)
+9. Learn [Databases - what are they and why are they used?](https://youtu.be/Tk1t3WKK-ZY), [SQL](https://youtu.be/OT1RErkfLNQ) and then [Prisma ORM](https://www.prisma.io/)
 
+   - [SQL Hindi Tutorial](https://youtu.be/yE6tIle64tU)
    - [Prisma Tutorial Video 1](https://youtu.be/RebA5J-rlwg?si=DubInABLgjQPpoPW)
    - [Prisma Tutorial Video 2](https://youtu.be/QXxy8Uv1LnQ?si=8AyGxRlDi1jzf83A)
    - Recommendation: Remove the `output` field from `generator client` portion of schema.prisma. The field causes unknown and unwanted errors as the wasm.js file contains `require()` syntax which is forbidden in modern TS syntax, could be disabled by `.eslintignore` but that's another hassle.
