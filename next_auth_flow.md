@@ -1,41 +1,152 @@
-# Next Auth Flow Deep Dive
+# NextAuth Flow Deep Dive (with Database Strategy)
 
-- [Simplified Flow Diagram](./next_auth_flow_diagram.png)
+This document clarifies the exact flow of data in NextAuth.js when using the **database session strategy** with the Prisma Adapter, which is the default for the T3 Stack.
 
-## The config:
+## The Core Concept: The Two Layers of Session Management
+
+To understand the flow, you must think of NextAuth as having two layers on the server:
+
+1.  **The Internal Token Layer (`jwt` callback):** Regardless of your strategy, NextAuth uses an internal, short-lived JWT on the server. This token acts as a "data packet" that carries information between the different stages of the authentication process. The `jwt` callback is your hook to add custom data (like a user's `role` or provider `accessToken`) into this packet.
+2.  **The External Session Layer (`session` callback & strategy):** This layer determines how the session is stored and exposed to your app.
+    - With the **`database` strategy**, NextAuth takes the internal data packet, uses it to create a session record in your database, and sends a simple, secure reference token to the client in a cookie.
+    - The `session` callback then builds the final session object that your app (`auth()` and `useSession()`) will see.
+
+**The key takeaway:** You use the `jwt` callback to _prepare the data efficiently_, and the `session` callback to _present that data_ to your application.
+
+## The Recommended Config (`src/server/auth.ts`)
+
+This configuration demonstrates the **best practice** for adding a custom `role` to your session for optimal performance.
 
 ```ts
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
+import {
+  type DefaultSession,
+  type NextAuthConfig,
+  type User as NextAuthUser,
+} from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { db } from "@/server/db";
 import GitHubProvider from "next-auth/providers/github";
 
+// Assuming you have this in your prisma schema
+type UserRole = "USER" | "ADMIN";
+
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
- *
- * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      role: UserRole; // Add your custom property here
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  // We also need to add the role to the User model so the adapter can read it
+  interface User extends NextAuthUser {
+    role: UserRole;
+  }
 }
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
- * @see https://next-auth.js.org/configuration/options
+ */
+export const authConfig = {
+  providers: [
+    // ... your providers
+  ],
+  adapter: PrismaAdapter(db),
+  session: {
+    strategy: "database",
+  },
+  callbacks: {
+    /**
+     * The JWT callback is called first. It's the ideal place to perform actions
+     * that should only happen once per sign-in, like adding the user's role to the token.
+     * The data you add to the `token` here will be available in the `session` callback.
+     */
+    jwt: async ({ token, user }) => {
+      // On initial sign-in, the `user` object is available
+      if (user) {
+        token.id = user.id;
+        token.role = user.role; // The `user` object comes from the adapter, so it has the role
+      }
+      return token;
+    },
+
+    /**
+     * The session callback is called after the JWT callback. It receives the token
+     * from the `jwt` callback and uses it to build the final session object that is
+     * returned to the client.
+     */
+    session: ({ session, token }) => {
+      // `token` contains the data we added in the `jwt` callback
+      if (session.user && token.id) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as UserRole;
+      }
+      return session;
+    },
+  },
+} satisfies NextAuthConfig;
+```
+
+My point was, you DO NOT NEED it, you can use it but can skip it in db strategy and directly make the session have all the properties a user model has - is it true? Also, what is the order of the callbacks when they run and which ones run per request, and which ones run only once and when? I need to add this info to the original doc you gave, lemme give it to you and can you address all my concerns in QnA form and add it to the following doc you gave?
+
+# NextAuth Flow Deep Dive (with Database Strategy)
+
+This document clarifies the exact flow of data in NextAuth.js when using the **database session strategy** with the Prisma Adapter, which is the default for the T3 Stack.
+
+## The Core Concept: The Two Layers of Session Management
+
+To understand the flow, you must think of NextAuth as having two layers on the server:
+
+1.  **The Internal Token Layer (`jwt` callback):** Regardless of your strategy, NextAuth uses an internal, short-lived JWT on the server. This token acts as a "data packet" that carries information between the different stages of the authentication process. The `jwt` callback is your hook to add custom data (like a user's `role` or provider `accessToken`) into this packet.
+2.  **The External Session Layer (`session` callback & strategy):** This layer determines how the session is stored and exposed to your app.
+    - With the **`database` strategy**, NextAuth takes the internal data packet, uses it to create a session record in your database, and sends a simple, secure reference token to the client in a cookie.
+    - The `session` callback then builds the final session object that your app (`auth()` and `useSession()`) will see.
+
+**The key takeaway:** You use the `jwt` callback to _prepare the data_, and the `session` callback to _present that data_ to your application.
+
+## The Corrected Config (`src/server/auth.ts`)
+
+This configuration demonstrates how to correctly add a custom `role` to your session.
+
+```ts
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import {
+  type DefaultSession,
+  type NextAuthConfig,
+  type User as NextAuthUser,
+} from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import { db } from "@/server/db";
+import GitHubProvider from "next-auth/providers/github";
+
+// Assuming you have this in your prisma schema
+type UserRole = "USER" | "ADMIN";
+
+/**
+ * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
+ * object and keep type safety.
+ */
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    user: {
+      id: string;
+      role: UserRole; // Add your custom property here
+    } & DefaultSession["user"];
+  }
+
+  // We also need to add the role to the User model
+  interface User extends NextAuthUser {
+    role: UserRole;
+  }
+}
+
+/**
+ * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  */
 export const authConfig = {
   providers: [
@@ -49,753 +160,290 @@ export const authConfig = {
     }),
   ],
   adapter: PrismaAdapter(db),
+  session: {
+    strategy: "database", // This is the default with an adapter
+  },
   callbacks: {
-    session: ({ session, user }) => {
-      console.log("SESSION RUNNING\n\n\n");
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: user.id,
-        },
-      };
+    /**
+     * The JWT callback is called first. It's the ideal place to perform actions
+     * that should only happen once per sign-in, like fetching the user's role from the database.
+     * The data you add to the `token` here will be available in the `session` callback.
+     */
+    jwt: async ({ token, user }) => {
+      // On initial sign-in, the `user` object is available
+      if (user) {
+        token.id = user.id;
+        token.role = user.role; // The `user` object comes from the adapter, so it has the role
+      }
+      return token;
+    },
+
+    /**
+     * The session callback is called after the JWT callback. It receives the token
+     * from the `jwt` callback and uses it to build the final session object that is
+     * returned to the client.
+     */
+    session: ({ session, token }) => {
+      // `token` contains the data we added in the `jwt` callback
+      if (session.user && token.id) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as UserRole;
+      }
+      return session;
     },
   },
 } satisfies NextAuthConfig;
 ```
 
-Let's understand the exact order and working of the NextAuth.js callbacks, specifically focusing on how they handle `accessToken`, `refreshToken`, and the user ID from an OAuth provider (like Google or GitHub), in the context of your setup with a Prisma Adapter.
+## The Authentication Flow (Database Strategy)
 
-This is the most critical flow to understand for custom fields and token refreshing!
+#### Step 1: OAuth & Adapter Interaction
 
-### Scenario: User logs in via OAuth Provider (e.g., Google) for the first time or subsequent times.
+The user is redirected to the OAuth provider (e.g., Google). After authenticating, they are sent back to your app. NextAuth's `PrismaAdapter` then does the following:
 
-Here's the step-by-step process:
+- Finds the user in your `User` table based on their email.
+- If the user doesn't exist, it creates a new `User` record.
+- It creates or updates an `Account` record, linking the user to the provider and storing tokens like `access_token` and `refresh_token` in the database.
 
-1.  **OAuth Provider Redirection & Callback:**
+#### Step 2: `signIn` Callback (The Gatekeeper)
 
-    - User clicks "Sign in with Google."
-    - NextAuth.js redirects to Google.
-    - User authenticates with Google and grants permissions.
-    - Google redirects back to your NextAuth.js `/api/auth/callback/google` endpoint.
-    - Google sends `code` (and potentially `state`) to NextAuth.js.
+- **When it runs:** After the adapter has done its work, but before the session is created.
+- **Purpose:** To decide if a user is allowed to sign in. You can check for a verified email, a specific domain, or if their account is active. You generally **do not** modify session data here.
+- **Returns:** `true` to allow sign-in, `false` or a redirect path (`"/banned"`) to deny it.
 
-2.  **NextAuth.js Internal Processing (Authentication Phase):**
+#### Step 3: `jwt` Callback (The Data Enricher)
 
-    - NextAuth.js exchanges the `code` for `accessToken`, `refreshToken`, `expires_at`, `id_token` from Google's token endpoint.
-    - It also uses the `accessToken` to fetch the user's `profile` (e.g., `name`, `email`, `image`) from Google's user info endpoint.
-    - **Adapter Interaction (PrismaAdapter):**
-      - NextAuth.js uses the `profile` information to check if the user already exists in firstly the `Account` table and then using the `userId` if found then in your `User` table (via `db.user.findUnique` typically).
-      - If not, it creates a new `User` record in your database.
-      - It then creates/updates an `Account` record in your database, storing the `userId` linked to this `User`, along with `provider`, `providerAccountId`, and crucially, the `accessToken`, `refreshToken`, `expires_at`, `id_token` received from Google.
+- **When it runs:** After `signIn` is successful.
+- **Purpose:** This is the most important callback for customizing session data. Its job is to enrich the **internal server-side token**.
+- **On Initial Sign-In:** The `user` object (from your database, via the adapter) is available. You take its properties (`id`, `role`, etc.) and add them to the `token`. This is efficient because it happens only once.
+- **For Provider Tokens:** This is also where you would add the provider's `access_token` from the `account` object to the `token` and implement the logic to refresh it if it expires.
 
-3.  **`signIn` Callback (Execution Order: 1st User-Defined Callback):**
+#### Step 4: `session` Callback (The Data Exposer)
 
-    - **Arguments:** You get `user` (the object from your `User` model in the database, with its `id`, `name`, `email`, `image`, and any other custom fields like `createdAt`, `updatedAt`, `role`), `account` (the full `Account` object from the database, containing all provider tokens), `profile` (raw data from provider), etc.
-    - **Purpose:** This is your initial gatekeeper. You can inspect the `user` or `account` to decide if this sign-in attempt should be allowed (`return true`) or denied (`return false` or `return "/error-page"`).
-    - **Provider Tokens:** You see `account.access_token`, `account.refresh_token` here, but you generally **don't manipulate them here**. This callback is for authorization (`allow/deny`), not data transformation for the session.
+- **When it runs:** After the `jwt` callback, every time a session is accessed (`auth()`, `useSession()`).
+- **Purpose:** To construct the final session object that will be sent to the client and exposed in your server code. It acts as a "filter," ensuring you don't accidentally leak sensitive data from the internal token to the frontend.
+- **How it works:** It receives the enriched `token` from the `jwt` callback. You simply transfer the properties you need (`id`, `role`) from the `token` to the `session.user` object. **You should avoid making database calls here** for performance reasons; the data should already be prepared in the `token`.
 
-    ```typescript
-    // Example:
-    async signIn({ user, account, profile }) {
-      // Check if user has a specific role or email domain
-      if (user && account?.provider === "google") {
-        // You can access account.access_token here, but it's not where you put it in session
-        // console.log("Google access token during signIn:", account.access_token);
-        // const dbUser = await db.user.findUnique({ where: { id: user.id }, select: { role: true }});
-        // if (dbUser?.role === "BLOCKED") return false;
-      }
-      return true; // Proceed with sign-in
-    },
-    ```
+### Summary of Data Flow
 
-4.  **`jwt` Callback (Execution Order: 2nd User-Defined Callback):**
+| Stage                | What Happens                                                        | Key Callback |
+| :------------------- | :------------------------------------------------------------------ | :----------- |
+| **Authentication**   | User logs in via provider; DB records are created/updated.          | -            |
+| **Authorization**    | Decide if the user is allowed to proceed.                           | `signIn()`   |
+| **Data Enrichment**  | Fetch custom data (`role`) ONCE and add it to an internal token.    | `jwt()`      |
+| **Session Creation** | A `Session` record is created in the database.                      | -            |
+| **Data Exposure**    | Shape the final session object for the app from the internal token. | `session()`  |
 
-    - **Arguments:**
-      - `token`: The internal JWT. On the _very first call_ after sign-in, this is initially an empty/minimal JWT. On subsequent calls (session refresh), it contains the data from the previous `jwt` callback execution.
-      - `user`: The `User` object from your database. (Available _only_ on initial sign-in).
-      - `account`: The `Account` object from your database, containing `access_token`, `refresh_token`, etc. (Available _only_ on initial sign-in).
-    - **Purpose:** This is the _most crucial_ callback for enriching the internal JWT that carries your session data.
-    - **How it works with Provider Tokens and Custom Fields:**
+By following this model, you get a performant, secure, and scalable authentication system where custom data is fetched efficiently and is available with full type safety throughout your application.
 
-      - **Initial Sign-in (`if (user && account)` block):**
+## Callback Execution Order & Frequency
 
-        - This block executes only once when the user successfully signs in.
-        - You take `user.id` and assign it to `token.id` (or `token.sub`).
-        - You query your database (e.g., `db.user.findUnique`) to fetch any _custom fields_ like `createdAt`, `updatedAt`, `role` from your `User` model, and add them to `token` (e.g., `token.createdAt`, `token.updatedAt`, `token.role`).
-        - You take the provider's `access_token`, `refresh_token`, `expires_at` from the `account` object and add them to `token` (e.g., `token.accessToken`, `token.refreshToken`, `token.accessTokenExpires`). This is vital for later refreshing.
+Understanding _when_ each callback runs is crucial for writing efficient code.
 
-      - **Subsequent Calls (Session Refreshes):**
-        - `user` and `account` are _not_ available here.
-        - The `token` object contains the data that was last returned by this `jwt` callback.
-        - This is where you implement the `refreshAccessToken` logic:
-          - Check `if (token.accessTokenExpires && Date.now() > token.accessTokenExpires)`.
-          - If expired, use `token.refreshToken` to make an API call to Google to get a _new_ `accessToken` and `expires_in`.
-          - Update `token.accessToken` and `token.accessTokenExpires` with the new values.
-          - Return the updated `token`.
-        - If the access token is still valid, simply `return token;`.
+| Callback      | When It Runs                                                                                                                                                             | How Often                                            | Purpose                                                  |
+| :------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------- | :------------------------------------------------------- |
+| **`signIn`**  | On sign-in attempt (before session creation).                                                                                                                            | **Once per sign-in.**                                | **Authorize:** Allow or deny the sign-in.                |
+| **`jwt`**     | After a successful `signIn`. Also runs when a session is checked and `strategy` is "jwt". With `strategy: "database"`, it runs on sign-in to help create the DB session. | **Once per sign-in.**                                | **Enrich:** Add custom data to the internal token.       |
+| **`session`** | When a session is accessed by the client or server (`useSession`, `auth()`).                                                                                             | **On every session check (per request/navigation).** | **Expose:** Build the final session object for your app. |
 
-    ```typescript
-    // Example:
-    async jwt({ token, user, account }) {
-      // 1. Initial Sign-in
-      if (account && user) {
-        token.id = user.id; // From DB user
-        token.accessToken = account.access_token; // From DB account
-        token.refreshToken = account.refresh_token; // From DB account
-        token.accessTokenExpires = account.expires_at * 1000; // From DB account (to ms)
+---
 
-        // Fetch custom fields from DB
-        const dbUser = await db.user.findUnique({
-          where: { id: user.id },
-          select: { createdAt: true, updatedAt: true, role: true },
-        });
-        if (dbUser) {
-          token.createdAt = dbUser.createdAt.getTime(); // Store as timestamp
-          token.updatedAt = dbUser.updatedAt.getTime();
-          token.role = dbUser.role;
-        }
-      }
-      // 2. Subsequent calls (token refresh)
-      // Check if access token is expired, and if so, refresh it
-      if (token.accessTokenExpires && Date.now() > token.accessTokenExpires) {
-        // Assume refreshAccessToken is a function defined elsewhere
-        // that takes token.refreshToken and returns a new token with updated access_token, expiry, etc.
-        console.log("Refreshing expired token...");
-        return refreshAccessToken(token);
-      }
-      // If token is not expired, just return it
-      return token;
-    },
-    ```
+## Q&A: Clarifying Common Points of Confusion
 
-5.  **`session` Callback (Execution Order: 3rd User-Defined Callback):**
+### Q1: Can I add custom user fields to the session _without_ using the `jwt` callback in the database strategy?
 
-    - **Arguments:**
-      - `session`: The default session object, initially populated with `name`, `email`, `image` from the database `User` object (because you have an adapter).
-      - `user`: The `User` object directly from your database (if using `database` strategy).
-      - `token`: The **internal JWT returned from the `jwt` callback** (containing all the custom fields and provider tokens you added/refreshed).
-    - **Purpose:** This is where you construct the final `session` object that will be exposed to your client-side (`useSession()`) and server-side (`getServerSession()`) code.
-    - **How it works:** You take the custom data from the `token` (which you've already ensured is up-to-date and complete in the `jwt` callback) and transfer it to the `session.user` object.
+**Yes, you technically can, but you shouldn't.**
 
-    ```typescript
-    // Example:
-    async session({ session, user, token }) {
-      if (session.user && token) {
-        // Transfer 'id' from token (or user)
-        session.user.id = user?.id || token.id; // Use user.id if available (direct from DB), else token.id
+It is possible to skip the `jwt` callback and put your logic directly in the `session` callback like this:
 
-        // Transfer custom fields from token (converted back from timestamp if needed)
-        if (token.createdAt) session.user.createdAt = new Date(token.createdAt);
-        if (token.updatedAt) session.user.updatedAt = new Date(token.updatedAt);
-        if (token.role) session.user.role = token.role;
+```ts
+// TECHNICALLY POSSIBLE, BUT INEFFICIENT - NOT RECOMMENDED
+callbacks: {
+  session: async ({ session, user }) => {
+    // The `user` object comes from the Prisma adapter and has your custom fields
+    session.user.role = user.role;
+    return session;
+  },
+}
+```
 
-        // If you need the actual provider access token on the client for API calls
-        if (token.accessToken) session.user.accessToken = token.accessToken;
-      }
-      // This is the object available to useSession() and getServerSession()
+**Why is this bad?**
+The `session` callback runs on **every single request** that checks for a session. This implementation forces a **database query on every request** to get the `user.role`. This can severely slow down your application and overload your database.
+
+The recommended approach (using the `jwt` callback) queries the database **only once** at sign-in and then re-uses that data from the in-memory token for all subsequent session checks, which is far more performant.
+
+### Q2: So, if the `jwt` callback is optional, why does this document recommend it so strongly?
+
+Because it represents the **performance and scalability best practice**.
+
+- **Performance:** It prevents redundant database calls.
+- **Scalability:** Your app will handle more traffic without slowing down.
+- **Functionality:** It is the **only** place where you can implement logic to refresh expired OAuth provider tokens (like a Google `access_token`). You cannot do this in the `session` callback.
+
+Think of it this way: skipping the `jwt` callback is an easy but inefficient shortcut. Using it is the professional, robust solution.
+
+### Q3: What is the exact order of operations for a user signing in for the first time?
+
+1.  **OAuth -> Adapter:** The user authenticates with Google. The Prisma Adapter creates the `User` and `Account` records in your database.
+2.  **`signIn` callback runs:** Receives the newly created `user`. It returns `true` to allow the process to continue.
+3.  **`jwt` callback runs:** Receives the same `user` object. It adds custom properties (`id`, `role`) to the `token`.
+4.  **Database Session Creation:** NextAuth takes the user ID (`token.sub`), creates a new record in the `Session` table, and links it to the user.
+5.  **Cookie is set:** A secure, http-only cookie containing the session token is sent to the user's browser. The sign-in is now complete.
+
+### Q4: What happens on a subsequent request (e.g., navigating to another page)?
+
+1.  **Cookie is sent:** The browser sends the session token cookie with the request.
+2.  **Database Session Lookup:** NextAuth uses the token from the cookie to look up the session in your `Session` table.
+3.  **`session` callback runs:** It receives a `session` object and a `user` object (fetched from the DB via the session link). If you were using the recommended `jwt` approach, it would also receive the `token` to build the final session object without another DB call.
+4.  **Session Returned:** The final session object is returned to your `auth()` call or `useSession()` hook.
+
+# Why use the `jwt` callback and NOT just the session callback?
+
+### The Short Answer
+
+When using the database strategy, the `user` object passed as a parameter to the `session` callback is the **result of a mandatory database query that NextAuth performs _before_ your callback is ever called.**
+
+---
+
+### The Journey of a Session Check: Where the DB Queries Happen
+
+Imagine a user is logged in and navigates to their dashboard. Your `app/dashboard/page.tsx` calls `await auth()`. Here is the step-by-step journey that happens on the server, revealing the hidden database queries.
+
+**Scenario: You are NOT using the `jwt` callback, only the `session` callback.**
+
+1.  **Browser Sends Cookie:** The browser sends the request to your server, including the secure, http-only `next-auth.session-token` cookie. This cookie contains a simple, random string (e.g., `abc-123`).
+
+2.  **NextAuth Receives Token:** NextAuth gets this token (`abc-123`). It knows nothing about the user yet, only this token.
+
+3.  **DATABASE QUERY #1 (The Session Query):** NextAuth must now find out who this token belongs to. It performs a database query against your `Session` table.
+
+    - **Conceptually:** `SELECT * FROM "Session" WHERE "sessionToken" = 'abc-123' LIMIT 1;`
+    - **Result:** It gets back a session record containing the `userId` (e.g., `user-xyz`) and an `expires` date. It checks if the session is valid and not expired.
+
+4.  **NextAuth Prepares for the `session` Callback:** The `session` callback's signature is `session({ session, user })`. NextAuth sees that it needs to provide a `user` object. It currently only has the `userId` (`user-xyz`).
+
+5.  **DATABASE QUERY #2 (The User Query):** To fulfill the contract of its own callback, NextAuth **must** perform a second database query against your `User` table to get the full user object.
+
+    - **Conceptually:** `SELECT * FROM "User" WHERE "id" = 'user-xyz' LIMIT 1;`
+    - **Result:** It gets back the full user record: `{ id: 'user-xyz', name: '...', email: '...', role: 'ADMIN', ... }`.
+
+6.  **Your `session` Callback is Finally Called:** Now that NextAuth has all the necessary data, it calls your function:
+    ```ts
+    // This function only runs AFTER two database queries have already succeeded.
+    session: ({ session, user }) => {
+      // The `user` object here is the result from Query #2.
+      // Accessing `user.role` is now an instant, in-memory operation.
+      session.user.role = user.role;
       return session;
     },
     ```
 
-6.  **Client-Side Session Availability:**
-    - The `session` object returned by the `session` callback is now available to your frontend (via `useSession()` hook in `next-auth/react`) and server-side logic (via `auth()` or `getServerSession()` in API routes/`getServerSideProps`).
+The slowness isn't in the line `session.user.role = user.role;`. The slowness is in the **two database round-trips that were required just to be able to call your function with the correct parameters.** This process happens on **every single request** that needs authentication.
 
-### Summary of Data Flow:
+### How the `jwt` Callback Prevents This
 
-- **OAuth Provider:** Gives you `access_token`, `refreshToken`, `id_token`, `expires_at`, `profile`.
-- **PrismaAdapter:** Stores these (along with `userId`) in your `Account` model in the database. Also creates/updates `User` records.
-- **`signIn` Callback:** Sees the `user` (from DB) and `account` (from DB, including tokens). Decides allow/deny. No data modification for session here.
-- **`jwt` Callback:**
-  - **Initial:** Gets `user` (DB) and `account` (DB). Pulls `id`, custom user fields (from `user`), and provider tokens (from `account`). **Adds all of this to the `token` (internal JWT).**
-  - **Subsequent:** Receives the `token` (from previous `jwt` run). **Refreshes provider tokens if expired and updates `token`**. Returns the `token`.
-- **`session` Callback:** Receives the `token` (the rich, internal JWT) and `user` (from DB). **Constructs the final `session` object for the client from `token` (and `user`)**.
+1.  **Sign-in (Once):**
 
-This detailed flow clarifies why the `jwt` callback is indispensable for custom fields and provider token management, even when your main session strategy is `database` with Prisma.
+    - User signs in.
+    - The `jwt` callback runs **once**.
+    - It queries the DB **once** to get the role.
+    - It creates an internal token like `{ id: 'user-xyz', role: 'ADMIN' }`.
+    - A session is created in the database.
 
-That's a very insightful question and points to a common point of confusion when first working with NextAuth.js, especially with database adapters!
-
-The short answer is: **Even with the database strategy and PrismaAdapter, NextAuth.js still uses an internal JWT, and the `jwt` callback is your primary means of modifying that internal token before it's used to create the session.**
-
-Let's break down why:
-
-# The Two "Layers" of Session Management in NextAuth.js
-
-NextAuth.js conceptually operates with two layers of session management:
-
-1.  **The Internal JWT Layer:**
-
-    - Regardless of your chosen `session.strategy` (`database` or `jwt`), NextAuth.js _always_ creates and uses an internal **JSON Web Token (JWT)** on the server.
-    - This JWT is never directly exposed to the client when using the `database` strategy.
-    - Its purpose is to **carry essential session data during the server-side authentication flow** from the point of authentication to the point where the session is written to the database (or a client-side cookie if using the `jwt` strategy).
-    - The `jwt` callback directly interacts with and manipulates this internal JWT.
-
-2.  **The External Session Layer (based on `session.strategy`):**
-    - This layer determines how the _actual user session_ (what gets sent to the client via `useSession()` or `getServerSession()`) is managed.
-    - **`session.strategy: "database"` (your current setup):**
-      - After the `jwt` callback runs and the internal JWT is created/modified, NextAuth.js uses the data from this JWT to:
-        - Create/update `Session` records in your database (via PrismaAdapter).
-        - Set a simple `next-auth.session-token` cookie on the client. This cookie **does not contain the full session data**; it only contains a lookup ID that points to the session record in your database.
-        - The `session` callback then pulls data from the database user and/or the internal JWT to build the final `session` object sent to the client.
-    - **`session.strategy: "jwt"`:**
-      - The internal JWT _itself_ becomes the client-side session cookie. No database `Session` records are created by NextAuth.js for session management.
-      - The `session` callback then directly uses the internal JWT to build the `session` object for the client.
-
-### Why You Need the `jwt` Callback with the Database Strategy:
-
-1.  **Data Flow for Custom Fields:**
-
-    - When a user logs in, NextAuth.js receives `user` and `account` objects from the provider.
-    - The `jwt` callback is the **first place** where you can intercept this `user` and `account` data and `await` additional data from your database (like `createdAt`, `updatedAt`, `role`, or even a Google `accessToken`).
-    - You then add this fetched data to the `token` (the internal JWT).
-    - This enriched `token` is then passed to the `session` callback.
-
-2.  **Populating `session.user.id`:**
-
-    - Even though the database strategy handles `userId` in the `Session` model, the `DefaultSession` interface doesn't automatically populate `session.user.id`.
-    - The `jwt` callback is the standard way to ensure `token.id = user.id` is set. Then, the `session` callback can pick `session.user.id = token.id` to ensure it's available for the client. This provides a consistent way to add `id` regardless of the session strategy.
-
-3.  **Handling Provider Tokens (e.g., Google `refresh_token`):**
-
-    - NextAuth.js stores provider-specific tokens (`access_token`, `refresh_token`, `expires_at`) in your `Account` model when using a database adapter.
-    - However, NextAuth.js **does not automatically use the `refresh_token` to get new `access_token`s** when the original one expires.
-    - The `jwt` callback is the _correct_ place to implement the logic for refreshing provider access tokens. You check if `token.accessTokenExpires` is in the past, use `token.refreshToken` to get a new `accessToken`, and then update `token.accessToken` and `token.accessTokenExpires`.
-    - Without this `jwt` callback logic, your Google `access_token` would expire after an hour, and you wouldn't be able to make further API calls without the user re-authenticating.
-
-4.  **Consistency and Reusability:**
-    - By putting the data enrichment logic in the `jwt` callback, you centralize how your user data flows into the session.
-    - If you ever decide to switch your `session.strategy` from `database` to `jwt`, your `jwt` callback logic for adding custom fields or handling token refreshes would remain largely the same, making your configuration more portable.
-
-### Analogy:
-
-Think of it like this:
-
-- **`signIn` callback:** The bouncer at the club door. Decides who gets in at all.
-- **`jwt` callback:** The "preparation room" behind the bouncer. This is where you get all the necessary personal belongings (user ID, roles, custom data, fresh provider tokens) ready and pack them into a special "internal passport" (the internal JWT).
-- **`session` callback:** The "presenter" of the session. It takes the "internal passport" (the internal JWT from the `jwt` callback) and/or directly queries the database user record to construct the final "ID card" (the session object) that the client gets to hold.
-- **`session.strategy: "database"`:** The "ID card" has a secret number on it that points to a locked safe (your database) containing all your full details. The client only sees the number, the server goes to the safe.
-- **`session.strategy: "jwt"`:** The "ID card" _is_ the full "internal passport" itself, encrypted and given directly to the client.
-
-Even if your "ID card" just points to a safe (database strategy), you still need that "preparation room" (`jwt` callback) to gather and prepare all the right details to put into the safe in the first place, or to get fresh supplies for your API calls.
-
-Therefore, you absolutely need to implement the `jwt` callback to effectively manage custom fields and provider access token refreshing, even when using the database session strategy with PrismaAdapter.
-
-# Anatomy of JWT
-
-Let's dive into JWTs and the `sub` (subject) claim! This is fundamental to understanding how identities are managed in token-based authentication.
-
-### What is a JWT (JSON Web Token)?
-
-A JWT is a compact, URL-safe means of representing claims to be transferred between two parties. The claims in a JWT are encoded as a JSON object that is digitally signed.
-
-A JWT typically consists of three parts, separated by dots (`.`):
-
-1.  **Header:**
-
-    - Contains the token type (JWT) and the signing algorithm used (e.g., HMAC SHA256 or RSA).
-    - Example: `{"alg": "HS256", "typ": "JWT"}`
-
-2.  **Payload (Claims):**
-
-    - This is the core of the JWT, a JSON object that contains the "claims" (statements about an entity, typically the user, and additional data).
-    - There are three types of claims:
-      - **Registered Claims:** Pre-defined, non-mandatory but recommended claims (e.g., `iss`, `exp`, `sub`, `aud`).
-      - **Public Claims:** Claims defined by users for public use, often registered in the IANA JWT Registry, or defined with collision-resistant names.
-      - **Private Claims:** Custom claims created by you that are neither registered nor public. Used for sharing information between parties who agree on their meaning.
-    - Example: `{"sub": "1234567890", "name": "John Doe", "admin": true}`
-
-3.  **Signature:**
-    - Created by taking the encoded header, the encoded payload, a secret (or a private key), and the algorithm specified in the header, and then signing them.
-    - This signature is used to verify that the sender of the JWT is who it says it is and that the message hasn't been tampered with.
-
-A full JWT looks like: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ`
-
-### What is `sub` (Subject Claim)?
-
-`sub` stands for **"subject"**. It is a **Registered Claim** in the JWT specification (RFC 7519).
-
-- **Purpose:** The `sub` claim identifies the **principal** (the entity or user) that the JWT is about. In most authentication systems, this will be the unique identifier for the user.
-- **Uniqueness:** It is typically a **unique, non-reassignable, and non-sensitive identifier** for the user. Examples include a database `user.id`, a unique username, or an email address (if it's guaranteed to be unique and immutable).
-- **Non-sensitive:** While it identifies the user, it generally shouldn't contain sensitive PII (Personally Identifiable Information) directly, as the payload is only _encoded_, not _encrypted_ (unless a separate encryption step is applied to the entire JWT). The signature ensures integrity, not confidentiality.
-- **Relationship to NextAuth.js:** In NextAuth.js, when a user successfully authenticates and you're using an adapter, the `sub` claim in the internal JWT is almost always set to the `id` of the user from your database (e.g., `user.id` from your Prisma `User` model).
-
-### How `sub` Works in Practice (with NextAuth.js):
-
-1.  **User Authentication:** A user signs in using Google.
-2.  **User Record Created/Found:** NextAuth.js (via PrismaAdapter) either creates a new `User` record in your database or finds an existing one. Let's say this user has `id: "clx123abc"`.
-3.  **Internal JWT Generation (Default `jwt` Callback):**
-    - If you don't define your own `jwt` callback, NextAuth.js's default `jwt` callback creates an internal JWT.
-    - It takes the `user.id` (`"clx123abc"`) and sets it as the `sub` claim in the JWT's payload: `{"sub": "clx123abc"}`.
-    - This JWT is then signed.
-4.  **Session Creation (Database Strategy):**
-    - NextAuth.js then uses this internal JWT (primarily its `sub` claim) to look up or create a `Session` record in your database, linking it to the user with `id = "clx123abc"`.
-    - A simple session token cookie is sent to the client, which is just an ID pointing back to the database session.
-5.  **Subsequent Requests:**
-    - On subsequent requests, the client sends this simple session token cookie.
-    - NextAuth.js uses this token to retrieve the full `Session` record from your database.
-    - From this `Session` record, it knows the `userId` (e.g., `"clx123abc"`).
-    - It then re-generates an internal JWT (again, with `sub` set to `"clx123abc"`). This JWT is passed to your `session` callback (as the `token` argument).
-
-### Why the `sub` is so important:
-
-- **Identity Assertion:** It's the core piece of information asserting "who" the token belongs to.
-- **Database Lookup:** With a database adapter, the `sub` (which maps to `user.id`) is the key used to fetch the full user profile from your database for further processing or for populating the `session` object.
-- **Authorization:** In server-side authorization checks, you'll often extract the `sub` from the internal JWT (or `session.user.id` derived from it) to determine permissions.
-- **Statelessness (for JWT strategy):** If you were using the `jwt` session strategy (where the JWT itself is the session cookie), the `sub` and other claims within that JWT would be the _only_ information needed to identify the user without a database lookup for the session itself.
-
-**Note**: In the current setup, even without you explicitly defining the `jwt` callback, the default behavior ensures that the `user.id` from your database is used as the `sub` in the internal JWT, which is then used to manage your database sessions. When you explicitly define the `jwt` callback, you gain control over _what else_ beyond `sub` gets added to that internal token, allowing you to include custom fields and manage provider-specific tokens.
-
-# Why JWT callback is needed when adding custom fields to other callbacks, why can't just session modification work?
-
-This is a great question because it probes the boundaries of how NextAuth.js's internal mechanisms work!
-
-Let's break down why this approach **will NOT fully work as you intend** for `createdAt` and `updatedAt` fields.
-
-### The Proposed Approach:
-
-1.  **Modify `declare module "next-auth"`:**
-
-    ```typescript
-    declare module "next-auth" {
-      interface Session extends DefaultSession {
-        user: {
-          id: string;
-          createdAt?: Date; // Added here
-          updatedAt?: Date; // Added here
-        } & DefaultSession["user"];
-      }
-    }
-    // No declare module "next-auth/jwt" modification
-    ```
-
-2.  **Modify `session` callback ONLY:**
-    ```typescript
-    callbacks: {
-      session: ({ session, user }) => {
-        console.log("SESSION RUNNING\n\n\n");
-        return {
-          ...session,
-          user: {
-            ...session.user,
-            id: user.id,
-            createdAt: user.createdAt, // <-- Attempt to add this directly from `user`
-            updatedAt: user.updatedAt, // <-- Attempt to add this directly from `user`
-          },
-        };
-      },
-    },
-    ```
-    (Note: This assumes `user.createdAt` and `user.updatedAt` are directly available in the `user` object passed to the `session` callback.)
-
-### Why this will **NOT** fully work for `createdAt` and `updatedAt`:
-
-The core issue lies in **what data is actually available in the `user` argument of the `session` callback** when using the `PrismaAdapter` (database strategy).
-
-1.  **The `user` object in `session` callback (with Database Strategy):**
-    When using a database adapter and the `database` session strategy, the `user` object passed to the `session` callback is indeed the `User` record fetched directly from your database based on the `userId` in the session token.
-
-    So, conceptually, `user.createdAt` and `user.updatedAt` _should_ be available on this `user` object, as these fields exist in your `User` model.
-
-2.  **The Role of the `jwt` callback (Even for Database Strategy):**
-
-    - **The Default `jwt` Callback:** When you _don't_ define your own `jwt` callback, NextAuth.js provides a default one. This default callback primarily populates the `sub` (subject, which is `user.id`) of the internal JWT. It _does not_ go out of its way to fetch all arbitrary fields from your `User` model (`createdAt`, `updatedAt`, `role`, etc.) and put them into this internal JWT.
-    - **Why the internal JWT matters:** While the `session` callback _does_ receive the `user` object directly from the database, it _also_ receives the `token` (the internal JWT). NextAuth.js's internal logic often relies on this `token` for consistency, especially when constructing the final `session` object. The `session` callback often takes properties from _either_ `token` or `user` depending on what's available and the strategy.
-
-3.  **Potential for Data Stale-ness and Inconsistency (The Bigger Problem):**
-    - If you _only_ rely on fetching `user` data in the `session` callback:
-      - The `user` object here represents the _current state_ of the user in the database.
-      - While this might seem fine for `createdAt` and `updatedAt` (which don't change often), it means every time a session is checked or refreshed, NextAuth.js might be doing an extra database query just to get these fields for the session.
-      - More critically, this approach breaks down for fields that need to be derived or frequently refreshed, like **provider access tokens (e.g., Google's)** or complex roles based on multiple factors. The `jwt` callback is the designated place for that dynamic logic.
-
-### The Correct and Recommended Approach (as discussed previously):
-
-The recommended pattern is to use the `jwt` callback to _prepare_ all the necessary custom data into the internal `token` (JWT). Then, the `session` callback takes this `token` and just transfers its contents to the final `session` object.
-
-**Steps Revisited for Clarity:**
-
-1.  **Prisma Schema:** Ensure `createdAt`, `updatedAt` (and any other fields like `role`) exist in your `User` model.
-2.  **Augment `next-auth/jwt` type:**
-    ```typescript
-    declare module "next-auth/jwt" {
-      interface JWT {
-        id: string;
-        createdAt?: number; // As timestamp
-        updatedAt?: number; // As timestamp
-        // role?: "USER" | "ADMIN";
-        // accessToken?: string;
-      }
-    }
-    ```
-3.  **Augment `next-auth` (`Session`) type:**
-    ```typescript
-    declare module "next-auth" {
-      interface Session extends DefaultSession {
-        user: {
-          id: string;
-          createdAt?: Date; // As Date object for client
-          updatedAt?: Date; // As Date object for client
-          // role?: "USER" | "ADMIN";
-          // accessToken?: string;
-        } & DefaultSession["user"];
-      }
-    }
-    ```
-4.  **Implement/Modify `jwt` callback:**
-    ```typescript
-    callbacks: {
-      async jwt({ token, user, account }) {
-        if (user) { // On initial sign-in
-          token.id = user.id;
-          // Fetch from DB once and add to internal JWT
-          const dbUser = await db.user.findUnique({
-            where: { id: user.id },
-            select: { createdAt: true, updatedAt: true /*, role: true */ },
-          });
-          if (dbUser) {
-            token.createdAt = dbUser.createdAt.getTime();
-            token.updatedAt = dbUser.updatedAt.getTime();
-            // token.role = dbUser.role;
-          }
-          // Add provider tokens if applicable (Google etc.)
-          if (account?.provider === "google") { /* ... */ }
-        }
-        // Handle refreshing provider tokens here if they expire
-        // ... refreshAccessToken logic ...
-        return token;
-      },
-      // ...
-    }
-    ```
-5.  **Implement/Modify `session` callback:**
-    ```typescript
-    callbacks: {
-      // ... jwt callback ...
-      async session({ session, token }) { // Notice 'token' is key here
-        if (session.user && token) {
-          session.user.id = token.id;
-          if (token.createdAt) session.user.createdAt = new Date(token.createdAt);
-          if (token.updatedAt) session.user.updatedAt = new Date(token.updatedAt);
-          // if (token.role) session.user.role = token.role;
-          // if (token.accessToken) session.user.accessToken = token.accessToken;
-        }
+2.  **Subsequent Request (e.g., navigating to dashboard):**
+    - **Browser Sends Cookie:** Same as before.
+    - **DATABASE QUERY #1 (The Session Query):** Same as before. NextAuth queries the `Session` table to validate the token and get the `userId`. This is unavoidable.
+    - **NextAuth Prepares for Callbacks:** NextAuth sees it has the `userId`. It knows it needs to run the `jwt` and `session` callbacks.
+    - **The `jwt` callback is called:** NextAuth re-builds the internal token. Crucially, it uses the `userId` from the session to populate the token. It does **not** need to re-query the `User` table for the role, because that logic is inside the `if (user)` block which only runs at sign-in.
+    - **The `session` callback is called:**
+      ```ts
+      session: ({ session, token }) => {
+        // The `token` is already populated with the role from sign-in.
+        // This is an instant, in-memory operation.
+        session.user.role = token.role;
         return session;
-      },
-    },
-    ```
+      };
+      ```
+    - In this flow, there is **NO second database query for the `User` object**.
 
-### Why the recommended approach is better:
+### Summary Table: Database Hits Per Request
 
-- **Consistency:** The `jwt` callback always creates the consistent "source of truth" for what data should be in the session.
-- **Performance:** You fetch custom fields from the database once per session creation/refresh in the `jwt` callback. If you relied solely on the `session` callback's `user` object and it was fetching data every time, it could lead to more frequent database queries than necessary.
-- **Token Refreshing:** The `jwt` callback is the _only_ place where you can correctly implement the logic for refreshing OAuth provider access tokens (e.g., Google). This is not possible in the `session` callback.
-- **Flexibility:** If you ever switch your `session.strategy` to `jwt`, your data enrichment logic in the `jwt` callback is already perfectly set up.
+| Approach                     | DB Query #1 (`Session` table) | DB Query #2 (`User` table) | Total Queries per Request |
+| :--------------------------- | :---------------------------- | :------------------------- | :------------------------ |
+| **`session`-Only (Slow)**    | ✅ Yes                        | ✅ Yes                     | **2**                     |
+| **`jwt` + `session` (Fast)** | ✅ Yes                        | ❌ **No**                  | **1**                     |
 
-So, while `user.createdAt` might technically be available in the `session` callback's `user` argument when using an adapter, it's generally **not the robust or recommended way** to manage custom fields or complex session logic. Always use the `jwt` callback to prepare the data for the session.
+By using the `jwt` callback as a caching layer, you effectively **halve the number of database queries** on every authenticated request, which is a massive performance win.
 
-You've hit on a critical point for understanding NextAuth.js's default behavior!
+# Why the second query though?
 
-# What's happening by default without a `jwt` callback?
+### The Decisive Factor: The `user` Parameter Itself
 
-When you _don't_ explicitly define the `jwt` callback, NextAuth.js provides a **default `jwt` callback** for you. This default behavior depends on whether you have an adapter configured:
+The second database query (`User` table) is triggered **specifically because the `user` object is a required parameter for the `session` callback in that configuration.**
 
-1.  **With an Adapter (Your Case - PrismaAdapter):**
+#### The Causality Chain
 
-    - The default `jwt` callback, upon successful sign-in, will primarily add the `user.id` (from your database user object) to the internal JWT (`token.sub` which means "subject" of the token). It doesn't typically add much else by default like `name`, `email`, or `image` _from the database user_ to the internal JWT, unless they are implicitly part of `user.id`'s lookup.
-    - Crucially, it **does not automatically transfer custom fields** like `createdAt`, `updatedAt`, or `role` from your database `User` model into this internal JWT.
-    - It also **does not automatically transfer provider-specific tokens** like `access_token` or `refresh_token` from the `account` object into the internal JWT, nor does it handle refreshing them. These are still stored in your `Account` model in the database, but they aren't part of the internal JWT that the `session` callback receives.
+When you define your `session` callback, you are telling NextAuth what data you expect to receive.
 
-2.  **Without an Adapter (and `session.strategy: "jwt"`):**
-    - If you had no adapter, the default `jwt` callback would typically add `user.id`, `user.name`, `user.email`, and `user.image` from the initial provider response directly into the internal JWT, which then becomes the client-side session.
+**Scenario 1: The Slow Path**
 
-### Why your current `session` callback works for `id`, `name`, `email`, `image`:
-
-Your current `session` callback is defined as:
-
-```typescript
-callbacks: {
-  session: ({ session, user }) => {
-    console.log("SESSION RUNNING\n\n\n");
-    return {
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id, // <-- Here's the key!
-      },
-    };
-  },
-},
-```
-
-- When you use a **database adapter** (like PrismaAdapter), the `session` callback receives a `user` argument that is populated directly from your **database's `User` model**.
-- This `user` object already contains `id`, `name`, `email`, and `image` (because these fields are part of NextAuth.js's standard `User` interface, which is mapped by the adapter to your `User` model).
-- So, your current `session` callback is explicitly taking `user.id` (from the database `User` object) and adding it to `session.user`.
-- The `session.user` also implicitly gets `name`, `email`, and `image` from `DefaultSession["user"]`, which NextAuth.js populates automatically when using an adapter, directly from the `user` object.
-
-Therefore, `id`, `name`, `email`, `image` are available to `useSession()` and `getServerSession()` because:
-
-- `id` is explicitly added by your `session` callback from the `user` (database) object.
-- `name`, `email`, `image` are implicitly added by NextAuth.js to `session.user` from the `user` (database) object due to the default `DefaultSession["user"]` mapping.
-
-### For adding _more_ fields (like `role`, `createdAt`, `updatedAt`):
-
-**Yes, you absolutely need to be explicit and define the `jwt` callback (and potentially adjust the `session` callback as well).**
-
-Here's why and how:
-
-1.  **`createdAt` and `updatedAt`:** These are custom fields that are _not_ part of the standard `DefaultSession` or `User` interface that NextAuth.js expects. They exist in _your specific_ Prisma `User` model.
-
-    - **The Problem:** The default `jwt` callback won't know to pull these fields from your database and put them into the internal JWT.
-    - **The Solution:** You need to implement the `jwt` callback to `await db.user.findUnique(...)` and explicitly add `createdAt` and `updatedAt` to the `token` object.
-
-2.  **`role` (if you add it):** Similar to `createdAt` and `updatedAt`, `role` is a custom field.
-
-    - **The Problem:** The default `jwt` callback won't include it.
-    - **The Solution:** You need to implement the `jwt` callback to fetch `role` from the database and add it to the `token` object.
-
-3.  **Provider Access/Refresh Tokens (e.g., Google):**
-    - **The Problem:** The default `jwt` callback does _not_ put the `access_token` or `refresh_token` from the `account` object into the internal JWT, nor does it handle refreshing them. While these are stored in your database `Account` model, they aren't readily available for the `session` callback from the `token` argument, and more importantly, they won't be automatically refreshed.
-    - **The Solution:** You _must_ implement the `jwt` callback to store these tokens in the `token` object and to add the logic for refreshing the `access_token` when it expires.
-
-### The Flow with Custom Fields:
-
-1.  **User signs in:** NextAuth.js authenticates with Google/GitHub.
-2.  **Default `signIn` callback (implicitly `true`):** Allows the sign-in.
-3.  **Your Custom `jwt` callback (explicitly defined):**
-    - Receives `user` (from DB) and `account` (from provider).
-    - You explicitly query `db.user.findUnique` to get `createdAt`, `updatedAt`, `role` from your database.
-    - You add `user.id`, `createdAt`, `updatedAt`, `role`, and provider tokens (like Google's `access_token`, `refresh_token`) to the `token` (internal JWT).
-    - This is also where you'd implement the `refreshAccessToken` logic if the Google `access_token` has expired.
-    - Returns the _enriched_ `token`.
-4.  **Your Custom `session` callback:**
-    - Receives the _enriched_ `token` from the `jwt` callback, and the `user` object directly from the database (via PrismaAdapter).
-    - You explicitly transfer `token.id`, `token.createdAt`, `token.updatedAt`, `token.role`, and `token.accessToken` (if needed) to `session.user`.
-    - Returns the `session` object ready for the client.
-
-**In summary:** While NextAuth.js provides some sensible defaults, for any fields beyond the very basic `id`, `name`, `email`, `image` (especially those specific to your database schema or provider tokens), you need to take control of the `jwt` and `session` callbacks. The `jwt` callback is where you enrich the data, and the `session` callback is where you expose that enriched data to your frontend.
-
-## ✅ 1. Is `session` what's available via `getServerSession()` and `useSession()`?
-
-**Yes, exactly.**
-
-- `getServerSession()` (Server Components or API routes)
-- `useSession()` (Client Components)
-
-Both give you the **final shaped session object**, based on the result of your `callbacks.session()`.
-
-```ts
-const session = await getServerSession(authConfig);
-// OR
-const { data: session } = useSession();
-```
-
-This object is **never the raw JWT** — it’s the result of running your `session()` callback.
-
----
-
-## ✅ 2. Is `jwt` stored in a cookie even when using the "jwt" strategy?
-
-Yes — this is the core idea:
-
-- NextAuth’s **"jwt" strategy** means:
-
-  - The session is stored in a **JWT** inside an **HTTP-only cookie**.
-  - Not in the database.
-
-### Cookie name:
-
-- The JWT is stored in:
-
-  ```
-  next-auth.session-token
-  ```
-
-- It is **HTTP-only**, **Secure**, and **not accessible via JavaScript**.
-
----
-
-## ✅ 3. In the "database" strategy, is the `jwt()` callback still used?
-
-Yes — but only **under specific circumstances**:
-
-- If you're using the **database session strategy** (i.e., `adapter + session.strategy = "database"`), then:
-
-  - Session info is stored in the DB (`Session` model)
-  - **`jwt()` is not used** for token creation
-  - Instead, `session()` builds the session object based on the DB-stored session
-
-### So:
-
-| Strategy     | Is `jwt()` used?                                     |
-| ------------ | ---------------------------------------------------- |
-| `"jwt"`      | ✅ Yes, creates token                                |
-| `"database"` | ❌ No (unless you're customizing for something else) |
-
----
-
-## ✅ 4. Can I access the raw JWT in `getServerSession()` or `useSession()`?
-
-> ❌ **No — you cannot access the raw JWT directly via `getServerSession()` or `useSession()`**.
-
-### Why?
-
-- The JWT is stored in an **HTTP-only cookie**, meaning:
-
-  - 🔐 **JavaScript can’t read it** (good security!)
-  - ✅ It’s sent with every request automatically (via `cookie` header)
-  - ✅ NextAuth reads and **decodes + verifies** it server-side
-  - ✅ Then it passes the final `session()` result to your app
-
-If you want the **raw JWT** (e.g., to access fields not exposed in `session()`), you must:
-
-1. Include that field in the token in `jwt()` callback
-2. Pull it into `session()` manually
+You write this code:
 
 ```ts
 callbacks: {
-  jwt({ token, user }) {
-    if (user) token.role = user.role;
-    return token;
-  },
-  session({ session, token }) {
-    session.user.role = token.role;
+  session: ({ session, user }) => { // You are REQUESTING the `user` object
+    session.user.role = user.role;
     return session;
   },
 }
 ```
 
-Still — **you never get access to the raw JWT string** unless you manually parse it from the cookie (not recommended).
+1.  NextAuth prepares to call your function.
+2.  It looks at the function's signature and sees that you have requested the `user` parameter.
+3.  NextAuth says, "I have a contract to fulfill. I _must_ provide a complete `user` object from the database to this function."
+4.  It has already done Query #1 (on the `Session` table) to get the `userId`.
+5.  To fulfill the contract, it is now **forced** to perform Query #2 (on the `User` table) using that `userId`.
+6.  Only after Query #2 is complete can it call your function with both the `session` and the fully populated `user` objects.
+
+In this model, **the function signature _causes_ the database query.**
 
 ---
 
-## 🧠 Summary Table
+**Scenario 2: The Fast Path (The `jwt` solution)**
 
-| Concept                   | Description                                                          |
-| ------------------------- | -------------------------------------------------------------------- |
-| `session()`               | Builds what `getServerSession()` / `useSession()` returns            |
-| `jwt()`                   | Builds token (only for JWT strategy)                                 |
-| Where is JWT stored?      | HTTP-only secure cookie (`next-auth.session-token`)                  |
-| Accessible in JS?         | ❌ No, not accessible directly (by design)                           |
-| Access raw token?         | ❌ Not through `useSession()` or `getServerSession()`                |
-| Want custom token fields? | ✅ Add in `jwt()`, then expose via `session()`                       |
-| Using database strategy?  | `jwt()` is **not** used for session; `session()` uses DB-backed data |
-
-# Some last moment notes
-
-## 1. Database Session Strategy — What NextAuth Does by Default
-
-- NextAuth **stores sessions and user info in your DB** (via the adapter).
-- When you call `getServerSession()` or `useSession()`, NextAuth fetches the session **and user record from the DB**.
-- The default `session()` callback receives a **fresh user object from the DB**.
-- So **basic user fields like `name`, `email`, and `image` are automatically available in session**.
-- However, **custom fields like `role`, `createdAt`, `updatedAt` — even if they exist in your DB — are NOT automatically included** in the session unless you do something extra.
-
----
-
-## 2. Why Custom Fields Aren't Included by Default
-
-- The Prisma adapter **doesn't automatically merge every user DB column into the session object**.
-- **NextAuth only serializes the default user fields for performance and simplicity**.
-- Therefore, **to expose your custom fields (`role`, `createdAt`, etc.) to the session**, you need to **explicitly add them**.
-
----
-
-## 3. How To Explicitly Add Custom Fields
-
-You have two main ways:
-
-### Option A: Use `session()` callback to fetch DB user info
+You write this code:
 
 ```ts
 callbacks: {
-  async session({ session, user }) {
-    // `user` here is usually incomplete or undefined depending on your setup.
-    // Safer to query DB manually:
-    const dbUser = await prisma.user.findUnique({
-      where: { email: session.user.email },
-    });
-
-    if (dbUser) {
-      session.user.role = dbUser.role;
-      session.user.createdAt = dbUser.createdAt;
-      session.user.updatedAt = dbUser.updatedAt;
-    }
-
-    return session;
-  },
-}
-```
-
-- This means a DB query **on every session fetch** (every request).
-- No need for `jwt()` callback here.
-
----
-
-### Option B: Use `jwt()` callback to enrich the token at sign-in and reuse
-
-```ts
-callbacks: {
-  async jwt({ token, user }) {
+  jwt: async ({ token, user }) => {
+    // This runs ONCE at sign-in, caching the role in the token
     if (user) {
-      const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
-      if (dbUser) {
-        token.role = dbUser.role;
-        token.createdAt = dbUser.createdAt;
-        token.updatedAt = dbUser.updatedAt;
-      }
+      token.role = user.role;
     }
     return token;
   },
-  session({ session, token }) {
+  session: ({ session, token }) => { // You are NOT requesting the `user` object
+    // You are requesting the `token` instead
     session.user.role = token.role;
-    session.user.createdAt = token.createdAt;
-    session.user.updatedAt = token.updatedAt;
     return session;
   },
 }
 ```
 
-- Here, the DB query happens **only at sign-in / token refresh**.
-- The data is cached in the JWT token.
-- Session reads from the token, no DB query on every request.
-- Better performance, but data can get stale until token refreshes.
+1.  NextAuth prepares to call your `session` function.
+2.  It looks at the function's signature and sees you have requested the `token` parameter, **not** the `user` parameter.
+3.  NextAuth says, "I have a contract to fulfill. I must provide a `token` object."
+4.  It has already done Query #1 (on the `Session` table) to get the `userId`.
+5.  It uses the `userId` to reconstruct the internal `token` (which was originally created by the `jwt` callback at sign-in). This is a fast, in-memory operation.
+6.  It has now fulfilled its contract. **It has no reason to perform Query #2 because you never asked for the `user` object.**
+7.  It calls your function with the `session` and `token` objects.
 
----
+In this model, your function signature **prevents** the second database query.
 
-## 4. What About OAuth Provider Tokens?
+### "that's what is being saved by jwt, right?"
 
-- These **are not stored in the user DB record**, but in the `Account` table.
-- The default NextAuth flow **does not inject them into the session or JWT automatically**.
-- To use or refresh them, you must explicitly:
+**Precisely.**
 
-  - Fetch them from DB or `account` param in `jwt()` callback,
-  - Store in JWT token,
-  - Refresh as needed,
-  - Expose in `session()` if needed.
+The `jwt` callback's primary job in the database strategy is to act as a **caching mechanism**. It runs once at sign-in to do the expensive work (like querying the `User` table for custom fields). It then "saves" or "caches" the result of that work into the internal token.
 
----
-
-## 5. Why Both Perspectives Are True
-
-| Statement You Heard                                                         | My Explanation                                                 |
-| --------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| _"With DB sessions, jwt callback is not used."_                             | True for simple setups without custom fields or tokens.        |
-| _"To add custom fields like role, createdAt, etc., you need jwt callback."_ | True if you want to cache and reuse custom fields efficiently. |
-| _"Without jwt callback, you can do it in session with DB query."_           | Also true, but with extra DB hits on every request.            |
-
----
-
-## 6. When To Choose What?
-
-| You want:                           | Use:                  | Pros                                         | Cons                              |
-| ----------------------------------- | --------------------- | -------------------------------------------- | --------------------------------- |
-| Simplicity, freshest data           | `session()` only      | Always latest DB state, easy to reason about | More DB queries, less performant  |
-| Cache custom fields for performance | `jwt()` + `session()` | Fewer DB queries, fast session retrieval     | Slightly stale data until refresh |
-
----
-
-## Final Summary
-
-- **You don't have to implement the `jwt` callback to use database sessions.**
-- But **if you want to add and cache extra fields or provider tokens efficiently**, **implementing `jwt()` is the recommended approach.**
-- It's a performance vs. data-freshness trade-off.
-- You always **need to customize the `session()` callback to expose those fields to the client.**
+This allows you to design a `session` callback that relies on the cheap, in-memory `token` instead of the expensive, database-queried `user` object, thereby eliminating the extra database hit on every request.
