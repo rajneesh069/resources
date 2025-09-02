@@ -82,12 +82,10 @@
 
    1. **Best Resource**: [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWeT1ffjiImo0sYTcnLzo-wY&si=CBa323H9mwg5E8_W)
    2. [Luv's Playlist](https://www.youtube.com/playlist?list=PLauivoElc3ggagradg8MfOZreCMmXMmJ-) - from 25 to 27 then 46 to 48 and 56
-
-   - Backtracking is a part of recursion itself and NOTHING DIFFERENT OR NEW. It **resets the state of recursion wherever needed.**
-
-   3. [Backtracking by Aditya Verma](https://youtube.com/playlist?list=PL_z_8CaSLPWdbOTog8Jxk9XOjzUs3egMP&si=-Jla0611IPF1RLRk)
-   4. Optional: [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&si=Fp7k88ReMFYloivx)
-   5. Optional: [Kunal Kushwaha](https://youtube.com/playlist?list=PL9gnSGHSqcnp39cTyB1dTZ2pJ04Xmdrod&si=Fdi_KFrHAPOVe9Bx)
+   3. [Recursion Overview by Utkarsh Gupta](https://youtu.be/0UM_J1jE1dg) - Watch it and then move to 4, remember, only optional resources are optional ;)
+   4. [Coding Bat Recursion Deep Dive](https://youtube.com/playlist?list=PLMDZqACtfCkPKrMN-oxf6LGduAPyRTteu&si=CzPm4oWczm63YSY4) - Keep an eye out for the **2nd video** of the playlist, its **very very important**
+   5. Optional: [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9&si=Fp7k88ReMFYloivx) - watch the [combination sum 1](https://leetcode.com/problems/combination-sum/description/) and 2 videos now, it'll make much more sense after the `Coding Bat's` playlist, though, [combination sum 2](https://leetcode.com/problems/combination-sum-ii/description/) problem **should be** done via the method discussed in the 2nd video of the `Coding Bat's playlist`, think of how to do it that way, because that way prevails almost all of the time
+   6. Optional: [Kunal Kushwaha](https://youtube.com/playlist?list=PL9gnSGHSqcnp39cTyB1dTZ2pJ04Xmdrod&si=Fdi_KFrHAPOVe9Bx)
 
    - Resource: [LeetCode Questions](https://leetcode.com/problem-list/recursion/) - for practice after learning
 
@@ -100,35 +98,12 @@
    2. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0qUlt5H_kiKYaNSqJ81PMMY&si=8z6iWM5gBw4Km-NJ)
 
 9. Linked Lists
+
    1. [Kunal Kushwaha - Video 1](https://youtu.be/58YbpRDc4yw?si=lHrUBvgikc3WDTTK)
    2. [Kunal Kushwaha - Video 2](https://youtu.be/70tx7KcMROc?si=kL_i56zsTnF_XNyk)
    3. [Striver](https://youtube.com/playlist?list=PLgUwDviBIf0rAuz8tVcM0AymmhTRsfaLU&si=0XUi4HamUc7lUbC4)
-10. Stack and Queue
 
-    1. [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWdeOezg68SKkeLN4-T_jNHd&si=oIcacyjp0SeuDLDW)
-    2. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0pOd5zvVVSzgpo6BaCpHT9c&si=hH6pYTLcrneRzhcy)
-
-11. Sliding Window and Two Pointers
-
-    1. [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWeM8BDJmIYDaoQ5zuwyxnfj&si=6xeKbOrWT5J7Ne4-)
-    2. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0q7vrFA_HEWcqRqMpCXzYAL&si=C1kTItp5NMcmr4-V)
-
-12. Heap
-
-    0. [Kunal Kushwaha](https://youtu.be/Qf-TDPr0nYw?si=sOy1fnK9O1ST3__j) - Theory Video
-    1. [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWdtY9W22VjnPxG30CXNZpI9&si=h6ZuCcHTT3pQq2O8)
-
-13. Greedy Algorithm
-
-    - Sometimes, you could be confused and think that a greedy problem is a recursive/dp problem because recursion/dp allows you to go through all the possibilities and then find the min/max among them, but for greedy the constraints will be big and for recursion/dp the constraints aren't as big, so this could be a good hint to make an educated guess if the problem is of recursion/dp or greedy algorithm.
-
-    - Greedy algorithm is a constructive algorithm, i.e., you make the algorithm on the go depending on the question.
-
-    1. [Coder Army's Single Shot](https://youtu.be/-wqKvpYGg1I)
-
-    - Optional: [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0rF1w2Koyh78zafB0cz7tea&si=5n-9Zr1RR6VG3FKA)
-
-14. Trees and Graphs
+10. Trees and Graphs
 
     - **Hack**: Use the concept of <u>Adjacency Lists even in the Binary Tree problems</u>, because trees are special case of graphs and NOT separate. **<u>Trees = Graphs with no cycles.</u>**
 
@@ -138,6 +113,31 @@
     3. [Graphs in Depth by Aditya Verma](https://youtube.com/playlist?list=PL_z_8CaSLPWcn5bKG8UMI0St2D5EmQszx&si=O9nTzjlpyCduXqq5)
     4. [Use Striver's Playlist for learning Named Algorithms of Graphs](https://youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&si=7AlKq8lEyHMR4UiY)
     5. Optional: [Love Babbar's Playlist](https://youtube.com/playlist?list=PLDzeHZWIZsTobi35C3I-tKB3tRDX6YxuA&si=wsTwn_AtITtJtenK)
+
+11. Stack and Queue
+
+    1. [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWdeOezg68SKkeLN4-T_jNHd&si=oIcacyjp0SeuDLDW)
+    2. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0pOd5zvVVSzgpo6BaCpHT9c&si=hH6pYTLcrneRzhcy)
+
+12. Sliding Window and Two Pointers
+
+    1. [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWeM8BDJmIYDaoQ5zuwyxnfj&si=6xeKbOrWT5J7Ne4-)
+    2. [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0q7vrFA_HEWcqRqMpCXzYAL&si=C1kTItp5NMcmr4-V)
+
+13. Heap
+
+    0. [Kunal Kushwaha](https://youtu.be/Qf-TDPr0nYw?si=sOy1fnK9O1ST3__j) - Theory Video
+    1. [Aditya Verma's Playlist](https://youtube.com/playlist?list=PL_z_8CaSLPWdtY9W22VjnPxG30CXNZpI9&si=h6ZuCcHTT3pQq2O8)
+
+14. Greedy Algorithm
+
+    - Sometimes, you could be confused and think that a greedy problem is a recursive/dp problem because recursion/dp allows you to go through all the possibilities and then find the min/max among them, but for greedy the constraints will be big and for recursion/dp the constraints aren't as big, so this could be a good hint to make an educated guess if the problem is of recursion/dp or greedy algorithm.
+
+    - Greedy algorithm is a constructive algorithm, i.e., you make the algorithm on the go depending on the question.
+
+    1. [Coder Army's Single Shot](https://youtu.be/-wqKvpYGg1I)
+
+    - Optional: [Striver's Playlist](https://youtube.com/playlist?list=PLgUwDviBIf0rF1w2Koyh78zafB0cz7tea&si=5n-9Zr1RR6VG3FKA)
 
 15. Tries:
 
