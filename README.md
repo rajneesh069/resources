@@ -371,6 +371,7 @@
    - [Deep Dive in `asyncio`, recommended by Python Docs itself](https://youtube.com/playlist?list=PLhNSoGM2ik6SIkVGXWBwerucXjgP1rHmB&si=UJ240N3wvQBihiL2)
    - [Difference between JS and Python Async](./difference_between_JS_async_and_python_async.md)
    - [Asyncio Blog](https://www.arpalert.org/python-async-en.html)
+   - [Asyncio, Concurrency, Parallelism - the whole package]((https://alex-jacobs.com/posts/pythonasync/))
 10. Learn [NumPy](https://youtu.be/x7ULDYs4X84?si=1E73RqFFdauL1q4Q) for Python
 11. Learn [Pandas](https://youtu.be/EhYC02PD_gc?si=lsrgETgMLWL3wLHW)
 12. Optional: Learn [Django](https://youtube.com/playlist?list=PLu71SKxNbfoDOf-6vAcKmazT92uLnWAgy&si=6rhPI6l9A4QHecwh)
