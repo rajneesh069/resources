@@ -507,6 +507,51 @@ function Page() {
 
 **Rule: Always pair `useSuspenseQuery` with an explicit `<Suspense>` boundary.** Don't rely on implicit/inherited boundaries — you'll get loading UI you didn't intend.
 
+### Gotcha — Don't Put `<Suspense>` Inside the Suspending Component
+
+```tsx
+// ❌ WRONG — Suspense inside the component that calls useSuspenseQuery
+function TicketBoard() {
+  const { data } = useSuspenseQuery({
+    queryKey: ['tickets'],
+    queryFn: fetchTickets,
+  })
+  // ↑ The throw happens HERE, during render, BEFORE the return statement.
+  //   React never reaches the JSX below.
+
+  return (
+    <Suspense fallback={<TicketSkeleton />}>   {/* ← never reached */}
+      <TicketList tickets={data} />
+    </Suspense>
+  )
+}
+```
+
+**Why it fails:** `useSuspenseQuery` throws a Promise synchronously during render. JavaScript stops executing the function at the throw — the `return` statement (and the `<Suspense>` inside it) is never reached. React walks **up** the tree to find a `<Suspense>` boundary, not down into unreturned JSX.
+
+```tsx
+// ✅ CORRECT — Suspense is in the PARENT component
+function TicketPage() {
+  return (
+    <Suspense fallback={<TicketSkeleton />}>
+      <TicketBoard />   {/* ← this is where the throw happens */}
+    </Suspense>
+  )
+}
+
+function TicketBoard() {
+  const { data } = useSuspenseQuery({
+    queryKey: ['tickets'],
+    queryFn: fetchTickets,
+  })
+
+  // data is guaranteed defined — Suspense in the parent caught the Promise
+  return <TicketList tickets={data} />
+}
+```
+
+**Rule: `<Suspense>` must always be in a component _above_ the one that suspends — never inside it.**
+
 ### Gotcha — Should You Always Wrap Suspense with an ErrorBoundary?
 
 **With `useSuspenseQuery`: yes.** It throws two things:
