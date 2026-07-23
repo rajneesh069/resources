@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Celery + Redis — Shared-Queue Collision &amp; Isolation</title>
+<style>
+  :root {
+    --bg: #eef1f5;
+    --surface: #ffffff;
+    --surface-2: #f4f6f9;
+    --compartment: #f8fafc;
+    --ink: #171a20;
+    --ink-2: #545b66;
+    --ink-3: #838b96;
+    --line: #d7dce3;
+    --line-2: #e7ebf0;
+    --svc-a: #7d1c4a;
+    --svc-a-soft: #f7e7ef;
+    --svc-b: #17627d;
+    --svc-b-soft: #e2eef3;
+    --danger: #c62f38;
+    --danger-soft: #fbe7e8;
+    --ok: #1f875a;
+    --ok-soft: #e1f1ea;
+    --redis: #b23b32;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    --shadow: 0 1px 2px rgba(18, 22, 30, .05), 0 6px 20px rgba(18, 22, 30, .05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1014; --surface: #14181f; --surface-2: #1a1f27; --compartment: #161b23;
+      --ink: #e9edf2; --ink-2: #aab2be; --ink-3: #6d7681; --line: #29303b; --line-2: #1f252e;
+      --svc-a: #ec5c9d; --svc-a-soft: #2a1622; --svc-b: #57b8d6; --svc-b-soft: #10222b;
+      --danger: #ef5b60; --danger-soft: #2a1517; --ok: #46c088; --ok-soft: #10261c; --redis: #e56a60;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 26px rgba(0, 0, 0, .3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1014; --surface: #14181f; --surface-2: #1a1f27; --compartment: #161b23;
+    --ink: #e9edf2; --ink-2: #aab2be; --ink-3: #6d7681; --line: #29303b; --line-2: #1f252e;
+    --svc-a: #ec5c9d; --svc-a-soft: #2a1622; --svc-b: #57b8d6; --svc-b-soft: #10222b;
+    --danger: #ef5b60; --danger-soft: #2a1517; --ok: #46c088; --ok-soft: #10261c; --redis: #e56a60;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 26px rgba(0, 0, 0, .3);
+  }
+  :root[data-theme="light"] {
+    --bg: #eef1f5; --surface: #ffffff; --surface-2: #f4f6f9; --compartment: #f8fafc;
+    --ink: #171a20; --ink-2: #545b66; --ink-3: #838b96; --line: #d7dce3; --line-2: #e7ebf0;
+    --svc-a: #7d1c4a; --svc-a-soft: #f7e7ef; --svc-b: #17627d; --svc-b-soft: #e2eef3;
+    --danger: #c62f38; --danger-soft: #fbe7e8; --ok: #1f875a; --ok-soft: #e1f1ea; --redis: #b23b32;
+    --shadow: 0 1px 2px rgba(18, 22, 30, .05), 0 6px 20px rgba(18, 22, 30, .05);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-sans);
+    line-height: 1.55; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: clamp(20px, 3vw, 44px) clamp(16px, 3vw, 32px) 56px; }
+
+  header { margin-bottom: 30px; }
+  .eyebrow {
+    font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--redis); font-weight: 600; margin: 0 0 10px; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .eyebrow::before { content: ""; width: 22px; height: 2px; background: var(--redis); border-radius: 2px; }
+  h1 { font-size: clamp(1.5rem, 1.15rem + 1.5vw, 2.15rem); line-height: 1.12; margin: 0 0 12px;
+    letter-spacing: -.02em; text-wrap: balance; font-weight: 700; }
+  .thesis { margin: 0; max-width: 70ch; color: var(--ink-2); font-size: 1.02rem; }
+  .thesis b { color: var(--ink); font-weight: 600; }
+  .thesis .m { font-family: var(--font-mono); font-size: .92em; color: var(--ink); background: var(--surface-2);
+    padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line); }
+
+  .board { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+  @media (max-width: 880px) { .board { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px;
+    box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 16px; }
+  .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .panel-title { margin: 0; font-size: 1.12rem; font-weight: 700; letter-spacing: -.01em; display: flex; align-items: center; gap: 9px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .panel--before .dot { background: var(--danger); box-shadow: 0 0 0 4px var(--danger-soft); }
+  .panel--after .dot { background: var(--ok); box-shadow: 0 0 0 4px var(--ok-soft); }
+  .verdict { font-family: var(--font-mono); font-size: .72rem; font-weight: 600; letter-spacing: .04em; padding: 3px 9px; border-radius: 999px; }
+  .panel--before .verdict { color: var(--danger); background: var(--danger-soft); }
+  .panel--after .verdict { color: var(--ok); background: var(--ok-soft); }
+
+  .rail-label { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 2px 0 -4px; }
+  .rail-scroll { overflow-x: auto; padding: 10px 4px 4px; margin: 0 -4px; }
+  .rail { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; min-width: 420px; }
+  .car { position: relative; aspect-ratio: 1 / 1.15; border: 1px solid var(--line); border-radius: 6px;
+    background: var(--surface-2); display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: .72rem; color: var(--ink-3); font-weight: 600; }
+  .car[data-app="a"] { background: var(--svc-a-soft); border-color: var(--svc-a); color: var(--svc-a); }
+  .car[data-app="b"] { background: var(--svc-b-soft); border-color: var(--svc-b); color: var(--svc-b); }
+  .car[data-clash="1"] { border-color: var(--danger); background: var(--danger-soft); color: var(--danger); box-shadow: 0 0 0 2px var(--danger-soft); }
+  .car .badge { position: absolute; top: -7px; right: -6px; background: var(--danger); color: #fff; font-size: .58rem; line-height: 1; padding: 2px 4px; border-radius: 999px; font-weight: 700; }
+
+  .bindings { display: flex; flex-direction: column; gap: 12px; }
+  .lane { display: grid; grid-template-columns: minmax(0, 158px) auto minmax(0, 1fr); align-items: center; gap: 10px; }
+  @media (max-width: 520px) { .lane { grid-template-columns: 1fr; gap: 7px; } }
+
+  .app { border: 1px solid var(--line); border-left: 3px solid var(--ink-3); border-radius: 10px; background: var(--surface-2); padding: 8px 10px; min-width: 0; }
+  .app .app-name { font-size: .82rem; font-weight: 650; line-height: 1.25; word-break: break-word; }
+  .app .app-role { font-family: var(--font-mono); font-size: .66rem; color: var(--ink-3); letter-spacing: .02em; }
+  .app--a { border-left-color: var(--svc-a); }
+  .app--a .app-name { color: var(--svc-a); }
+  .app--b { border-left-color: var(--svc-b); }
+  .app--b .app-name { color: var(--svc-b); }
+
+  .link { display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--ink-3); min-width: 78px; }
+  .link .path { font-family: var(--font-mono); font-size: .68rem; color: var(--ink-2); }
+  .link .stroke { display: flex; align-items: center; width: 100%; }
+  .link .stroke::before { content: ""; height: 2px; flex: 1; background: currentColor; border-radius: 2px; opacity: .5; }
+  .link .stroke::after { content: "▸"; font-size: .7rem; margin-left: -2px; }
+  @media (max-width: 520px) { .link { flex-direction: row; min-width: 0; } .link .stroke { width: 40px; } }
+  .lane--a .link { color: var(--svc-a); }
+  .lane--b .link { color: var(--svc-b); }
+
+  .compartment { position: relative; border: 1px solid var(--line); border-radius: 11px; background: var(--compartment);
+    padding: 10px 11px 11px; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+  .compartment--danger { border-color: var(--danger); background: color-mix(in srgb, var(--danger-soft) 65%, var(--compartment)); }
+  .db-tag { font-family: var(--font-mono); font-size: .72rem; font-weight: 700; letter-spacing: .02em; align-self: flex-start;
+    padding: 2px 9px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); }
+  .compartment--danger .db-tag { color: var(--danger); border-color: var(--danger); }
+  .shelf { display: flex; align-items: center; gap: 8px; padding: 6px 9px; border-radius: 8px; border: 1px dashed var(--line); background: var(--surface); }
+  .shelf .q { font-family: var(--font-mono); font-size: .78rem; font-weight: 600; color: var(--ink); word-break: break-all; }
+  .shelf .state { margin-left: auto; font-size: .66rem; font-family: var(--font-mono); letter-spacing: .02em; color: var(--ink-3);
+    white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; }
+  .shelf .pip { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); flex: none; }
+
+  .shelf--watched { border-style: solid; }
+  .shelf--a.shelf--watched { border-color: var(--svc-a); background: var(--svc-a-soft); }
+  .shelf--a.shelf--watched .q, .shelf--a.shelf--watched .state { color: var(--svc-a); }
+  .shelf--a.shelf--watched .pip { background: var(--svc-a); }
+  .shelf--b.shelf--watched { border-color: var(--svc-b); background: var(--svc-b-soft); }
+  .shelf--b.shelf--watched .q, .shelf--b.shelf--watched .state { color: var(--svc-b); }
+  .shelf--b.shelf--watched .pip { background: var(--svc-b); }
+
+  .shelf--idle { opacity: .72; }
+  .shelf--idle .q { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--ink-3); }
+
+  .shelf--contended { border-style: solid; border-color: var(--danger); background: var(--surface); }
+  .shelf--contended .q { color: var(--danger); }
+  .shelf--contended .pip { background: var(--danger); }
+  .shelf--contended .state { color: var(--danger); font-weight: 600; }
+
+  .clash-note { display: flex; align-items: flex-start; gap: 7px; font-size: .78rem; color: var(--danger);
+    background: var(--danger-soft); border-radius: 8px; padding: 7px 9px; line-height: 1.4; }
+  .clash-note b { font-weight: 650; }
+
+  .collision { display: grid; grid-template-columns: minmax(0, 158px) auto minmax(0, 1fr); align-items: center; gap: 10px; }
+  @media (max-width: 520px) { .collision { grid-template-columns: 1fr; } }
+  .collision .apps { display: flex; flex-direction: column; gap: 7px; }
+
+  .panel-foot { margin-top: 2px; font-size: .84rem; color: var(--ink-2); line-height: 1.45; }
+  .panel-foot b { color: var(--ink); font-weight: 600; }
+
+  .takeaway { margin-top: 26px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); padding: 20px 22px; box-shadow: var(--shadow); }
+  .takeaway h2 { margin: 0 0 4px; font-size: 1.05rem; font-weight: 700; }
+  .takeaway .sub { margin: 0 0 16px; color: var(--ink-2); font-size: .92rem; }
+  .locks { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 640px) { .locks { grid-template-columns: 1fr; } }
+  .lock { border: 1px solid var(--line); border-radius: 12px; padding: 14px; background: var(--surface-2); }
+  .lock h3 { margin: 0 0 4px; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); font-family: var(--font-mono); font-weight: 600; }
+  .lock p { margin: 0; font-size: .88rem; color: var(--ink-2); line-height: 1.5; }
+  .lock p b { color: var(--ink); font-weight: 600; }
+  .lock .q { font-family: var(--font-mono); font-size: .84em; color: var(--ink); }
+
+  .legend { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; font-size: .78rem;
+    color: var(--ink-2); border-top: 1px solid var(--line-2); padding-top: 16px; }
+  .legend .item { display: inline-flex; align-items: center; gap: 7px; }
+  .legend .sw { width: 13px; height: 13px; border-radius: 4px; border: 1px solid var(--line); flex: none; }
+  .legend .sw--a { background: var(--svc-a-soft); border-color: var(--svc-a); }
+  .legend .sw--b { background: var(--svc-b-soft); border-color: var(--svc-b); }
+  .legend .sw--danger { background: var(--danger-soft); border-color: var(--danger); }
+  .legend .k { font-family: var(--font-mono); font-size: .72rem; color: var(--ink-3); }
+  .legend b { color: var(--ink); font-weight: 600; }
+
+  .footnote { margin-top: 14px; font-size: .75rem; color: var(--ink-3); font-family: var(--font-mono); letter-spacing: .01em; line-height: 1.5; }
+
+  .compartment, .app, .panel { transition: transform .15s ease, box-shadow .15s ease; }
+  .compartment:hover { transform: translateY(-1px); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <p class="eyebrow">Celery · Redis broker</p>
+    <h1>When two Celery workers share a Redis queue</h1>
+    <p class="thesis">
+      One Redis instance is a train of <b>16 compartments</b> (logical DBs, <span class="m">/0</span>–<span class="m">/15</span>).
+      Each compartment holds named <b>shelves</b> (Celery queues). A worker binds to exactly one
+      <b>(compartment, shelf)</b> pair — and a task is only stolen when two workers share <b>both</b>.
+      If nobody sets a queue, every worker defaults to the shelf named <span class="m">celery</span>.
+    </p>
+  </header>
+
+  <section class="board">
+    <!-- ============ BEFORE ============ -->
+    <article class="panel panel--before">
+      <div class="panel-head">
+        <h2 class="panel-title"><span class="dot"></span>Before</h2>
+        <span class="verdict">tasks stolen · stuck PENDING</span>
+      </div>
+
+      <p class="rail-label">Redis · 16 compartments (DBs)</p>
+      <div class="rail-scroll">
+        <div class="rail">
+          <div class="car" data-app="a">0</div>
+          <div class="car" data-clash="1">1<span class="badge">×2</span></div>
+          <div class="car">2</div><div class="car">3</div><div class="car">4</div><div class="car">5</div>
+          <div class="car">6</div><div class="car">7</div><div class="car">8</div><div class="car">9</div>
+          <div class="car">10</div><div class="car">11</div><div class="car">12</div><div class="car">13</div>
+          <div class="car">14</div><div class="car">15</div>
+        </div>
+      </div>
+
+      <div class="bindings">
+        <!-- Instance 1 alone on /0 -->
+        <div class="lane lane--a">
+          <div class="app app--a"><div class="app-name">Celery Worker Instance 1</div><div class="app-role">Service A · celery</div></div>
+          <div class="link"><span class="path">/0</span><span class="stroke"></span></div>
+          <div class="compartment">
+            <span class="db-tag">DB /0</span>
+            <div class="shelf shelf--a shelf--watched"><span class="pip"></span><span class="q">celery</span><span class="state">watched</span></div>
+          </div>
+        </div>
+
+        <!-- COLLISION: Instance 2 + Instance 3 both on /1 · celery -->
+        <div class="collision">
+          <div class="apps">
+            <div class="app app--a"><div class="app-name">Celery Worker Instance 2</div><div class="app-role">Service A · celery</div></div>
+            <div class="app app--b"><div class="app-name">Celery Worker Instance 3</div><div class="app-role">Service B · celery</div></div>
+          </div>
+          <div class="link" style="color:var(--danger)"><span class="path" style="color:var(--danger)">both → /1</span><span class="stroke"></span></div>
+          <div class="compartment compartment--danger">
+            <span class="db-tag">DB /1</span>
+            <div class="shelf shelf--contended"><span class="pip"></span><span class="q">celery</span><span class="state">contended ×2</span></div>
+            <div class="clash-note">⚡&nbsp;<span><b>Same compartment + same shelf.</b> Each worker grabs whichever message lands first. Instances 2 &amp; 3 are <b>different services</b>, so the wrong one can't run the task → it's <b>discarded</b> → the task never runs → stuck PENDING → FAILED.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="panel-foot"><b>Worst case:</b> if the two colliding workers were the <b>same service</b> (same registered tasks), there'd be <b>no error at all</b> — one would just run the other's task in the wrong place. Silent is more dangerous than loud.</p>
+    </article>
+
+    <!-- ============ AFTER ============ -->
+    <article class="panel panel--after">
+      <div class="panel-head">
+        <h2 class="panel-title"><span class="dot"></span>After</h2>
+        <span class="verdict">isolated · 0 theft</span>
+      </div>
+
+      <p class="rail-label">Redis · 16 compartments (DBs)</p>
+      <div class="rail-scroll">
+        <div class="rail">
+          <div class="car" data-app="a">0</div>
+          <div class="car" data-app="b">1</div>
+          <div class="car">2</div><div class="car">3</div><div class="car">4</div><div class="car">5</div>
+          <div class="car">6</div><div class="car">7</div><div class="car">8</div><div class="car">9</div>
+          <div class="car" data-app="a">10</div><div class="car">11</div><div class="car">12</div><div class="car">13</div>
+          <div class="car">14</div><div class="car">15</div>
+        </div>
+      </div>
+
+      <div class="bindings">
+        <!-- Instance 1 /0 · own queue -->
+        <div class="lane lane--a">
+          <div class="app app--a"><div class="app-name">Celery Worker Instance 1</div><div class="app-role">Service A · prod</div></div>
+          <div class="link"><span class="path">/0</span><span class="stroke"></span></div>
+          <div class="compartment">
+            <span class="db-tag">DB /0</span>
+            <div class="shelf shelf--a shelf--watched"><span class="pip"></span><span class="q">service_a_prod</span><span class="state">watched</span></div>
+            <div class="shelf shelf--idle"><span class="pip"></span><span class="q">celery</span><span class="state">idle</span></div>
+          </div>
+        </div>
+
+        <!-- Instance 3 /1 · celery -->
+        <div class="lane lane--b">
+          <div class="app app--b"><div class="app-name">Celery Worker Instance 3</div><div class="app-role">Service B</div></div>
+          <div class="link"><span class="path">/1</span><span class="stroke"></span></div>
+          <div class="compartment">
+            <span class="db-tag">DB /1</span>
+            <div class="shelf shelf--b shelf--watched"><span class="pip"></span><span class="q">celery</span><span class="state">watched</span></div>
+          </div>
+        </div>
+
+        <!-- Instance 2 /10 · own queue -->
+        <div class="lane lane--a">
+          <div class="app app--a"><div class="app-name">Celery Worker Instance 2</div><div class="app-role">Service A · staging</div></div>
+          <div class="link"><span class="path">/10</span><span class="stroke"></span></div>
+          <div class="compartment">
+            <span class="db-tag">DB /10</span>
+            <div class="shelf shelf--a shelf--watched"><span class="pip"></span><span class="q">service_a_staging</span><span class="state">watched</span></div>
+            <div class="shelf shelf--idle"><span class="pip"></span><span class="q">celery</span><span class="state">idle · unused</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="panel-foot">Every instance owns a distinct <b>(compartment, shelf)</b>. The default <span style="font-family:var(--font-mono)">celery</span> shelf still exists in Service&nbsp;A's DBs — just <b>empty and unwatched</b>.</p>
+    </article>
+  </section>
+
+  <!-- ============ TAKEAWAY ============ -->
+  <section class="takeaway">
+    <h2>Two independent locks</h2>
+    <p class="sub">Either one alone stops the theft. Use both — they're cheap, and they cover different failure modes.</p>
+    <div class="locks">
+      <div class="lock">
+        <h3>Lock 1 — Compartment (Redis DB)</h3>
+        <p>Point the worker at a different logical DB (<span class="q">REDIS_URL …/1 → …/10</span>). Different compartment → the queues can't overlap even if both are named <span class="q">celery</span>. Also isolates the control channel &amp; memory keyspace.</p>
+      </div>
+      <div class="lock">
+        <h3>Lock 2 — Shelf (Celery queue)</h3>
+        <p>Give each app its own queue: <span class="q">task_default_queue = "&lt;app&gt;_&lt;env&gt;_bg"</span>. Backs up Lock&nbsp;1 against a mis-set DB — and it's the <b>only</b> thing keeping two instances of the <b>same service</b> from silently running each other's tasks if they ever share a compartment.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="legend">
+    <span class="item"><span class="sw sw--a"></span><b>Service A</b> (Instances 1 &amp; 2)</span>
+    <span class="item"><span class="sw sw--b"></span><b>Service B</b> (Instance 3)</span>
+    <span class="item"><span class="sw sw--danger"></span>Collision</span>
+    <span class="item"><span class="k">compartment</span> = Redis logical DB</span>
+    <span class="item"><span class="k">shelf</span> = Celery queue name</span>
+    <span class="item">a worker binds to <b>one (DB, queue)</b> pair</span>
+  </div>
+
+  <p class="footnote">
+    The trap: multiple apps on one Redis instance all defaulting to DB <span style="color:var(--redis)">/0</span> + queue <span style="color:var(--redis)">celery</span>.<br>
+    The fix pattern: unique <span style="color:inherit">task_default_queue</span> per app, and a dedicated Redis DB per app/environment.
+  </p>
+</main>
+</body>
+</html>
